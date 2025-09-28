@@ -1,5 +1,6 @@
+// components/MovieTabs.tsx
 import { useState, useEffect } from "react";
-import { movieService } from "../services/movieService"; // Remove .tsx
+import { movieService } from "../services/movieService";
 
 type Comment = {
   id: number;
@@ -22,16 +23,12 @@ export default function MovieTabs({ movieId, overview }: MovieTabsProps) {
       setLoading(true);
       movieService
         .getComments(movieId)
-        .then((data: Comment[]) => {
-          setComments(data);
-        })
-        .catch((err) => {
-          console.error("Failed to fetch comments:", err);
+        .then(data => setComments(data))
+        .catch(err => {
+          console.error("Failed to load comments:", err);
           setComments([]);
         })
-        .finally(() => {
-          setLoading(false);
-        });
+        .finally(() => setLoading(false));
     }
   }, [activeTab, movieId]);
 
@@ -56,13 +53,14 @@ export default function MovieTabs({ movieId, overview }: MovieTabsProps) {
       {/* Tab Content */}
       <div className="mt-3">
         {activeTab === "overview" && <p>{overview}</p>}
+
         {activeTab === "comments" && (
           <div>
             {loading ? (
               <p>Loading comments...</p>
             ) : comments.length > 0 ? (
               <ul className="space-y-2">
-                {comments.map((c) => (
+                {comments.map(c => (
                   <li key={c.id} className="border p-2 rounded">
                     <p className="font-bold">{c.author}</p>
                     <p>{c.text}</p>
