@@ -7,9 +7,12 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 let supabase: any = null
 
 if (supabaseUrl && supabaseAnonKey) {
+  console.log('Supabase configured successfully!')
   supabase = createClient(supabaseUrl, supabaseAnonKey)
 } else {
   console.warn('Supabase environment variables not configured. Authentication features will be disabled.')
+  console.log('VITE_SUPABASE_URL:', supabaseUrl)
+  console.log('VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Present' : 'Missing')
   // Create a mock supabase client for development
   supabase = {
     auth: {
