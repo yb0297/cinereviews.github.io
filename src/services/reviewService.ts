@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase';
 import { Review, ReviewFormData } from '../types/review';
+import { supabase } from '../lib/supabase';
 import { fallbackReviewService } from './fallbackReviewService';
 
 export const reviewService = {
@@ -70,13 +70,27 @@ export const reviewService = {
   },
 
   async createReview(movieId: number, movieTitle: string, reviewData: ReviewFormData): Promise<Review | null> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      throw new Error('User must be authenticated to create a review');
-    }
-
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        // Try simple auth for fallback
+        const { simpleAuth } = await import('../lib/simpleAuth');
+        const simpleUser = simpleAuth.getCurrentUser();
+        if (!simpleUser) {
+          throw new Error('User must be authenticated to create a review');
+        }
+        
+        // Use fallback service for simple auth
+        return fallbackReviewService.createReview(
+          movieId, 
+          movieTitle, 
+          reviewData, 
+          simpleUser.id, 
+          simpleUser.full_name
+        );
+      }
+
       const { data, error } = await supabase
         .from('reviews')
         .insert({
@@ -113,80 +127,137 @@ export const reviewService = {
       };
     } catch (error) {
       console.warn('Database connection failed, using fallback storage:', error);
-      return fallbackReviewService.createReview(
-        movieId, 
-        movieTitle, 
-        reviewData, 
-        user.id, 
-        user.user_metadata?.full_name || user.email || 'Anonymous User'
-      );
+      const { simpleAuth } = await import('../lib/simpleAuth');
+      const simpleUser = simpleAuth.getCurrentUser();
+      if (simpleUser) {
+        return fallbackReviewService.createReview(
+          movieId, 
+          movieTitle, 
+          reviewData, 
+          simpleUser.id, 
+          simpleUser.full_name
+        );
+      }
+      throw error;
     }
   },
 
   async updateReview(reviewId: string, reviewData: Partial<ReviewFormData>): Promise<Review | null> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      throw new Error('User must be authenticated to update a review');
-    }
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        // Try simple auth for fallback
+        const { simpleAuth } = await import('../lib/simpleAuth');
+        const simpleUser = simpleAuth.getCurrentUser();
+        if (!simpleUser) {
+          throw new Error('User must be authenticated to update a review');
+        }
+        
+        // Use fallback service for simple auth
+        return fallbackReviewService.updateReview(reviewId, 0, simpleUser.id, reviewData); // movieId will be determined in fallback
+      }
 
-    const { data, error } = await supabase
-      .from('reviews')
-      .update({
-        ...reviewData,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', reviewId)
-      .eq('user_id', user.id)
-      .select(`
-        *,
-        profiles (
-          full_name,
-          username,
-          avatar_url
-        )
-      `)
-      .single();
+      const { data, error } = await supabase
+        .from('reviews')
+        .update({
+          ...reviewData,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', reviewId)
+        .eq('user_id', user.id)
+        .select(`
+          *,
+          profiles (
+            full_name,
+            username,
+            avatar_url
+          )
+        `)
+        .single();
 
-    if (error) {
-      console.error('Error updating review:', error);
+      if (error) {
+        console.warn('Supabase error, using fallback storage:', error);
+        const { simpleAuth } = await import('../lib/simpleAuth');
+        const simpleUser = simpleAuth.getCurrentUser();
+        if (simpleUser) {
+          return fallbackReviewService.updateReview(reviewId, 0, simpleUser.id, reviewData);
+        }
+        throw error;
+      }
+
+      return {
+        ...data,
+        user_name: data.profiles?.full_name || data.profiles?.username || 'Anonymous User',
+        user_avatar: data.profiles?.avatar_url || null
+      };
+    } catch (error) {
+      console.warn('Database connection failed, using fallback storage:', error);
+      const { simpleAuth } = await import('../lib/simpleAuth');
+      const simpleUser = simpleAuth.getCurrentUser();
+      if (simpleUser) {
+        return fallbackReviewService.updateReview(reviewId, 0, simpleUser.id, reviewData);
+      }
       throw error;
     }
-
-    return {
-      ...data,
-      user_name: data.profiles?.full_name || data.profiles?.username || 'Anonymous User',
-      user_avatar: data.profiles?.avatar_url || null
-    };
   },
 
   async deleteReview(reviewId: string): Promise<boolean> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      throw new Error('User must be authenticated to delete a review');
-    }
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        // Try simple auth for fallback
+        const { simpleAuth } = await import('../lib/simpleAuth');
+        const simpleUser = simpleAuth.getCurrentUser();
+        if (!simpleUser) {
+          throw new Error('User must be authenticated to delete a review');
+        }
+        
+        // Use fallback service for simple auth
+        return fallbackReviewService.deleteReview(reviewId, 0, simpleUser.id); // movieId will be determined in fallback
+      }
 
-    const { error } = await supabase
-      .from('reviews')
-      .delete()
-      .eq('id', reviewId)
-      .eq('user_id', user.id);
+      const { error } = await supabase
+        .from('reviews')
+        .delete()
+        .eq('id', reviewId)
+        .eq('user_id', user.id);
 
-    if (error) {
-      console.error('Error deleting review:', error);
+      if (error) {
+        console.warn('Supabase error, using fallback storage:', error);
+        const { simpleAuth } = await import('../lib/simpleAuth');
+        const simpleUser = simpleAuth.getCurrentUser();
+        if (simpleUser) {
+          return fallbackReviewService.deleteReview(reviewId, 0, simpleUser.id);
+        }
+        throw error;
+      }
+
+      return true;
+    } catch (error) {
+      console.warn('Database connection failed, using fallback storage:', error);
+      const { simpleAuth } = await import('../lib/simpleAuth');
+      const simpleUser = simpleAuth.getCurrentUser();
+      if (simpleUser) {
+        return fallbackReviewService.deleteReview(reviewId, 0, simpleUser.id);
+      }
       throw error;
     }
-
-    return true;
   },
 
   async getUserReviewForMovie(movieId: number): Promise<Review | null> {
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) return null;
-
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        // Try simple auth for fallback
+        const { simpleAuth } = await import('../lib/simpleAuth');
+        const simpleUser = simpleAuth.getCurrentUser();
+        if (!simpleUser) return null;
+        return fallbackReviewService.getUserReviewForMovie(movieId, simpleUser.id);
+      }
+
       const { data, error } = await supabase
         .from('reviews')
         .select(`
@@ -215,7 +286,12 @@ export const reviewService = {
       };
     } catch (error) {
       console.warn('Database connection failed, using fallback storage:', error);
-      return fallbackReviewService.getUserReviewForMovie(movieId, user.id);
+      const { simpleAuth } = await import('../lib/simpleAuth');
+      const simpleUser = simpleAuth.getCurrentUser();
+      if (simpleUser) {
+        return fallbackReviewService.getUserReviewForMovie(movieId, simpleUser.id);
+      }
+      return null;
     }
   }
 };

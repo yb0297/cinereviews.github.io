@@ -3,6 +3,7 @@ import { X, Star, Calendar, Clock, Share2, ExternalLink, Youtube } from 'lucide-
 import { Movie } from '../types/movie';
 import { Review, ReviewFormData } from '../types/review';
 import { reviewService } from '../services/reviewService';
+import { simpleAuth } from '../lib/simpleAuth';
 import { AdBanner } from './AdBanner';
 import type { User } from '@supabase/supabase-js';
 
@@ -39,11 +40,11 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
 
   // Load user's existing review
   React.useEffect(() => {
-    if (isOpen && movie && user) {
+    if (isOpen && movie && (user || simpleAuth.getCurrentUser())) {
       loadUserReview();
     }
     // Clear user review when user logs out
-    if (!user) {
+    if (!user && !simpleAuth.getCurrentUser()) {
       setUserReview(null);
       setNewReview({
         rating: 5,
@@ -71,7 +72,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
   };
 
   const loadUserReview = async () => {
-    if (!movie || !user) return;
+    if (!movie) return;
     
     try {
       const existingReview = await reviewService.getUserReviewForMovie(movie.id);
@@ -166,7 +167,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
   };
 
   const handleSubmitReview = async () => {
-    if (!user) {
+    if (!user && !simpleAuth.getCurrentUser()) {
       onAuthRequired();
       return;
     }
@@ -221,7 +222,11 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
   };
 
   const handleDeleteReview = async () => {
-    if (!userReview || !user) return;
+    if (!userReview) return;
+    if (!user && !simpleAuth.getCurrentUser()) {
+      onAuthRequired();
+      return;
+    }
 
     if (!confirm('Are you sure you want to delete your review?')) return;
 
@@ -666,12 +671,56 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
                         </div>
                       </div>
 
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 pt-4 border-t border-gray-100">
-                        <span className="text-gray-400">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <span className="text-sm text-gray-400">
                           {review.updated_at !== review.created_at ? 'Updated' : 'Posted'} {new Date(review.updated_at).toLocaleDateString()}
                         </span>
-                        <button className="hover:text-gray-700 transition-colors">Reply</button>
-                        <button className="hover:text-gray-700 transition-colors">Report</button>
+                        
+                        {/* Show edit/delete buttons only for the review owner */}
+                        {(() => {
+                          const currentUserId = user?.id ?? simpleAuth.getCurrentUser()?.id;
+                          return currentUserId === review.user_id;
+                        })() && (
+                          <div className="flex items-center space-x-2">
+                            <button 
+                              onClick={() => {
+                                setUserReview(review);
+                                setNewReview({
+                                  rating: review.rating,
+                                  title: review.title,
+                                  content: review.content,
+                                  pros: review.pros,
+                                  cons: review.cons,
+                                  recommendation: review.recommendation
+                                });
+                                setShowReviewForm(true);
+                              }}
+                              className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              onClick={async () => {
+                                if (confirm('Are you sure you want to delete this review?')) {
+                                  try {
+                                    await reviewService.deleteReview(review.id);
+                                    await loadReviews();
+                                    const currentUserId = user?.id ?? simpleAuth.getCurrentUser()?.id;
+                                    if (review.user_id === currentUserId) {
+                                      setUserReview(null);
+                                    }
+                                  } catch (error) {
+                                    console.error('Error deleting review:', error);
+                                    alert('Failed to delete review. Please try again.');
+                                  }
+                                }
+                              }}
+                              className="text-red-600 hover:text-red-700 text-sm font-medium transition-colors"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     ))
