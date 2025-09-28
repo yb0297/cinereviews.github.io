@@ -27,6 +27,47 @@ const mockGenres: Genre[] = [
   { id: 53, name: "Thriller" },
 ];
 
+// 🎬 Sample comments for each movie
+const mockComments: Record<number, { user: string; message: string; date: string }[]> = {
+  1: [
+    { user: "Aman", message: "Best Batman movie ever!", date: "2025-09-01" },
+    { user: "Priya", message: "Heath Ledger’s Joker is legendary.", date: "2025-09-05" },
+  ],
+  2: [
+    { user: "Karan", message: "Mind-bending masterpiece!", date: "2025-09-03" },
+  ],
+  3: [
+    { user: "Meera", message: "Made me cry, so beautiful!", date: "2025-09-04" },
+  ],
+  4: [
+    { user: "Ravi", message: "Parasite blew my mind.", date: "2025-09-06" },
+  ],
+  5: [
+    { user: "Sneha", message: "Epic visuals, loved the desert world.", date: "2025-09-07" },
+  ],
+  6: [
+    { user: "Arjun", message: "Insanely creative!", date: "2025-09-08" },
+  ],
+  7: [
+    { user: "Isha", message: "Pandora feels real. Stunning!", date: "2025-09-09" },
+  ],
+  8: [
+    { user: "Rohan", message: "Avengers assemble!", date: "2025-09-10" },
+  ],
+  9: [
+    { user: "Neha", message: "Dark but brilliant.", date: "2025-09-11" },
+  ],
+  10: [
+    { user: "Manish", message: "Best Spidey movie!", date: "2025-09-12" },
+  ],
+  11: [
+    { user: "Divya", message: "Wakanda forever!", date: "2025-09-13" },
+  ],
+  12: [
+    { user: "Rahul", message: "Goosebumps! Maverick rocks.", date: "2025-09-14" },
+  ],
+};
+
 export const movieService = {
   async getPopularMovies(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
@@ -52,39 +93,26 @@ export const movieService = {
 
     const searchTerm = query.toLowerCase().trim();
     
-    // Enhanced search that looks in title, overview, and handles partial matches
     const results = mockMovies.filter(movie => {
       const titleMatch = movie.title.toLowerCase().includes(searchTerm);
       const overviewMatch = movie.overview.toLowerCase().includes(searchTerm);
-      
-      // Also search for individual words
       const searchWords = searchTerm.split(' ');
       const wordMatch = searchWords.some(word => 
         movie.title.toLowerCase().includes(word) || 
         movie.overview.toLowerCase().includes(word)
       );
-      
       return titleMatch || overviewMatch || wordMatch;
     });
 
-    // Sort results by relevance (title matches first, then overview matches)
     return results.sort((a, b) => {
       const aTitle = a.title.toLowerCase();
       const bTitle = b.title.toLowerCase();
-      
-      // Exact title match gets highest priority
       if (aTitle === searchTerm) return -1;
       if (bTitle === searchTerm) return 1;
-      
-      // Title starts with search term
       if (aTitle.startsWith(searchTerm) && !bTitle.startsWith(searchTerm)) return -1;
       if (bTitle.startsWith(searchTerm) && !aTitle.startsWith(searchTerm)) return 1;
-      
-      // Title contains search term
       if (aTitle.includes(searchTerm) && !bTitle.includes(searchTerm)) return -1;
       if (bTitle.includes(searchTerm) && !aTitle.includes(searchTerm)) return 1;
-      
-      // Fall back to rating
       return b.vote_average - a.vote_average;
     });
   },
@@ -92,5 +120,10 @@ export const movieService = {
   async getGenres(): Promise<Genre[]> {
     await new Promise(res => setTimeout(res, 100));
     return mockGenres;
+  },
+
+  async getComments(movieId: number) {
+    await new Promise(res => setTimeout(res, 200));
+    return mockComments[movieId] || [];
   }
 };
