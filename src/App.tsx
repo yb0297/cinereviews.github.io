@@ -26,6 +26,7 @@ function App() {
       const popularMovies = await movieService.getPopularMovies();
       setMovies(popularMovies);
       setFeaturedMovie(popularMovies[0] || null);
+      setCurrentSection('home');
     } catch (error) {
       console.error('Error loading movies:', error);
     } finally {
@@ -34,11 +35,18 @@ function App() {
   };
 
   const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+
+    if (!query.trim()) {
+      handleNavigate('home');
+      return;
+    }
+
     try {
       setLoading(true);
-      setSearchQuery(query);
       const searchResults = await movieService.searchMovies(query);
       setMovies(searchResults);
+      setCurrentSection('search');
     } catch (error) {
       console.error('Error searching movies:', error);
     } finally {
@@ -49,11 +57,11 @@ function App() {
   const handleNavigate = async (section: string) => {
     setCurrentSection(section);
     setSearchQuery('');
-    
+
     try {
       setLoading(true);
       let newMovies: Movie[] = [];
-      
+
       switch (section) {
         case 'home':
           newMovies = await movieService.getPopularMovies();
@@ -67,12 +75,14 @@ function App() {
           break;
         case 'coming-soon':
           newMovies = await movieService.getPopularMovies();
-          newMovies = newMovies.filter(movie => new Date(movie.release_date) > new Date());
+          newMovies = newMovies.filter(
+            (movie) => new Date(movie.release_date) > new Date()
+          );
           break;
         default:
           newMovies = await movieService.getPopularMovies();
       }
-      
+
       setMovies(newMovies);
     } catch (error) {
       console.error('Error loading section:', error);
@@ -93,25 +103,29 @@ function App() {
 
   const getSectionTitle = () => {
     if (searchQuery) return `Search Results for "${searchQuery}"`;
-    
     switch (currentSection) {
-      case 'home': return 'Popular Movies';
-      case 'trending': return 'Trending Now';
-      case 'top-rated': return 'Top Rated Movies';
-      case 'coming-soon': return 'Coming Soon';
-      default: return 'Movies';
+      case 'home':
+        return 'Popular Movies';
+      case 'trending':
+        return 'Trending Now';
+      case 'top-rated':
+        return 'Top Rated Movies';
+      case 'coming-soon':
+        return 'Coming Soon';
+      default:
+        return 'Movies';
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header 
+      <Header
         onSearch={handleSearch}
         onNavigate={handleNavigate}
         currentSection={currentSection}
       />
 
-      {/* Hero Section - Only show on home page */}
+      {/* Hero Section */}
       {currentSection === 'home' && !searchQuery && featuredMovie && (
         <HeroSection
           featuredMovie={featuredMovie}
@@ -123,22 +137,20 @@ function App() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">{getSectionTitle()}</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            {getSectionTitle()}
+          </h2>
           <p className="text-gray-600">
-            {searchQuery 
+            {searchQuery
               ? `Found ${movies.length} results`
-              : 'Discover your next favorite movie'
-            }
+              : 'Discover your next favorite movie'}
           </p>
         </div>
 
         {loading ? (
           <LoadingSpinner />
         ) : (
-          <MovieGrid 
-            movies={movies}
-            onMovieClick={handleMovieClick}
-          />
+          <MovieGrid movies={movies} onMovieClick={handleMovieClick} />
         )}
       </main>
 
@@ -161,37 +173,33 @@ function App() {
                 <span className="text-xl font-bold">CineReviews</span>
               </div>
               <p className="text-gray-400 mb-4 max-w-md">
-                Your ultimate destination for movie reviews, ratings, and recommendations. 
-                Discover your next favorite film with our curated collection.
+                Your ultimate destination for movie reviews, ratings, and
+                recommendations. Discover your next favorite film with our
+                curated collection.
               </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Twitter</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Facebook</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Instagram</a>
-              </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Movies</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Popular</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Top Rated</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Coming Soon</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Trending</a></li>
+                <li className="hover:text-white transition-colors">Popular</li>
+                <li className="hover:text-white transition-colors">Top Rated</li>
+                <li className="hover:text-white transition-colors">Coming Soon</li>
+                <li className="hover:text-white transition-colors">Trending</li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li className="hover:text-white transition-colors">Help Center</li>
+                <li className="hover:text-white transition-colors">Contact Us</li>
+                <li className="hover:text-white transition-colors">Privacy Policy</li>
+                <li className="hover:text-white transition-colors">Terms of Service</li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2024 CineReviews. All rights reserved.</p>
           </div>
