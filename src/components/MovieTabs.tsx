@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { movieService } from "../services/movieService";
+import { movieService } from "../services/movieService.tsx";
 
 type MovieTabsProps = {
   movieId: number;
