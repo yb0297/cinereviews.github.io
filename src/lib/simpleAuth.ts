@@ -16,12 +16,23 @@ export const simpleAuth = {
     }
   },
 
-  setUser(username: string): SimpleUser {
+  async setUser(username: string): Promise<SimpleUser> {
     const user: SimpleUser = {
       id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       username: username.trim(),
       full_name: username.trim()
     };
+    
+    // Try to create profile in database if available
+    try {
+      const { databaseReviewService } = await import('../services/databaseReviewService');
+      await databaseReviewService.ensureUserProfile(user.id, {
+        username: user.username,
+        full_name: user.full_name
+      });
+    } catch (error) {
+      console.warn('Could not create user profile in database:', error);
+    }
     
     localStorage.setItem('simple_auth_user', JSON.stringify(user));
     return user;

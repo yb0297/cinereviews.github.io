@@ -270,8 +270,8 @@ function App() {
       <SimpleAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
-        onAuthSuccess={(username: string) => {
-          const newUser = simpleAuth.setUser(username);
+        onAuthSuccess={async (username: string) => {
+          const newUser = await simpleAuth.setUser(username);
           setUser(newUser);
         }}
       />
