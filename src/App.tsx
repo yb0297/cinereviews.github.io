@@ -10,12 +10,14 @@ import { LoadingSpinner } from './components/LoadingSpinner';
 import { AdBanner } from './components/AdBanner';
 import { AdSidebar } from './components/AdSidebar';
 import { ContactForm } from './components/ContactForm';
+import { ProfileModal } from './components/ProfileModal';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
@@ -280,6 +282,13 @@ function App() {
         onClose={() => setIsAuthModalOpen(false)}
         user={user}
         onAuthChange={setUser}
+      />
+
+      {/* Profile Modal */}
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        user={user}
       />
 
       {/* Contact Form Modal */}
