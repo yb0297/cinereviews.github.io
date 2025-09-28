@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from './lib/supabase';
+import type { User } from '@supabase/supabase-js';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { MovieGrid } from './components/MovieGrid';
 import { MovieModal } from './components/MovieModal';
+import { AuthModal } from './components/AuthModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { AdBanner } from './components/AdBanner';
 import { AdSidebar } from './components/AdSidebar';
+import { ContactForm } from './components/ContactForm';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
@@ -17,9 +23,31 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
 
   useEffect(() => {
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
     loadMovies();
+    
+    // Listen for contact form events
+    const handleOpenContactForm = () => setIsContactFormOpen(true);
+    window.addEventListener('openContactForm', handleOpenContactForm);
+    
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('openContactForm', handleOpenContactForm);
+    };
   }, []);
 
   const loadMovies = async () => {
@@ -70,6 +98,28 @@ function App() {
         case 'home':
           newMovies = await movieService.getPopularMovies();
           break;
+        case 'movies':
+          newMovies = await movieService.getPopularMovies();
+          // Filter for movies only (you can add movie-specific logic here)
+          break;
+        case 'series':
+          newMovies = await movieService.getPopularMovies();
+          // Filter for series (mock data for now)
+          newMovies = newMovies.slice(0, 6).map(movie => ({
+            ...movie,
+            title: movie.title + ' (Series)',
+            overview: movie.overview + ' This is a TV series adaptation.'
+          }));
+          break;
+        case 'anime':
+          newMovies = await movieService.getPopularMovies();
+          // Filter for anime (mock data for now)
+          newMovies = newMovies.slice(0, 4).map(movie => ({
+            ...movie,
+            title: movie.title + ' (Anime)',
+            overview: movie.overview + ' This is an anime adaptation.'
+          }));
+          break;
         case 'trending':
           newMovies = await movieService.getTrendingMovies();
           break;
@@ -112,6 +162,12 @@ function App() {
     switch (currentSection) {
       case 'home':
         return 'Popular Movies';
+      case 'movies':
+        return 'Movies';
+      case 'series':
+        return 'TV Series';
+      case 'anime':
+        return 'Anime';
       case 'trending':
         return 'Trending Now';
       case 'top-rated':
@@ -129,6 +185,8 @@ function App() {
         onSearch={handleSearch}
         onNavigate={handleNavigate}
         currentSection={currentSection}
+        user={user}
+        onAuthClick={() => setIsAuthModalOpen(true)}
       />
 
       {/* Hero Section */}
@@ -212,6 +270,22 @@ function App() {
         movie={selectedMovie}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+        user={user}
+        onAuthRequired={() => setIsAuthModalOpen(true)}
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        user={user}
+        onAuthChange={setUser}
+      />
+
+      {/* Contact Form Modal */}
+      <ContactForm
+        isOpen={isContactFormOpen}
+        onClose={() => setIsContactFormOpen(false)}
       />
 
       {/* Footer */}
@@ -235,20 +309,51 @@ function App() {
             <div>
               <h4 className="font-semibold mb-4">Movies</h4>
               <ul className="space-y-2 text-gray-400">
-                <li className="hover:text-white transition-colors">Popular</li>
-                <li className="hover:text-white transition-colors">Top Rated</li>
-                <li className="hover:text-white transition-colors">Coming Soon</li>
-                <li className="hover:text-white transition-colors">Trending</li>
+                <li 
+                  className="hover:text-white transition-colors cursor-pointer"
+                  onClick={() => handleNavigate('movies')}
+                >
+                  Movies
+                </li>
+                <li 
+                  className="hover:text-white transition-colors cursor-pointer"
+                  onClick={() => handleNavigate('series')}
+                >
+                  TV Series
+                </li>
+                <li 
+                  className="hover:text-white transition-colors cursor-pointer"
+                  onClick={() => handleNavigate('anime')}
+                >
+                  Anime
+                </li>
+                <li 
+                  className="hover:text-white transition-colors cursor-pointer"
+                  onClick={() => handleNavigate('trending')}
+                >
+                  Trending
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-gray-400">
-                <li className="hover:text-white transition-colors">Help Center</li>
-                <li className="hover:text-white transition-colors">Contact Us</li>
-                <li className="hover:text-white transition-colors">Privacy Policy</li>
-                <li className="hover:text-white transition-colors">Terms of Service</li>
+                <li className="hover:text-white transition-colors cursor-pointer">
+                  Help Center
+                </li>
+                <li 
+                  className="hover:text-white transition-colors cursor-pointer"
+                  onClick={() => setIsContactFormOpen(true)}
+                >
+                  Contact Us
+                </li>
+                <li className="hover:text-white transition-colors cursor-pointer">
+                  Privacy Policy
+                </li>
+                <li className="hover:text-white transition-colors cursor-pointer">
+                  Terms of Service
+                </li>
               </ul>
             </div>
           </div>
