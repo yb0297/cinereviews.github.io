@@ -214,5 +214,5 @@ CineReviews
 );
 };
 
-Comment off Admin control panel
+
 
