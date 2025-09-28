@@ -38,7 +38,8 @@ function App() {
     setSearchQuery(query);
 
     if (!query.trim()) {
-      handleNavigate('home');
+      // If search is empty, go back to home
+      await loadMovies();
       return;
     }
 
@@ -49,6 +50,7 @@ function App() {
       setCurrentSection('search');
     } catch (error) {
       console.error('Error searching movies:', error);
+      setMovies([]); // Show empty results on error
     } finally {
       setLoading(false);
     }
@@ -102,7 +104,9 @@ function App() {
   };
 
   const getSectionTitle = () => {
-    if (searchQuery) return `Search Results for "${searchQuery}"`;
+    if (searchQuery && currentSection === 'search') {
+      return `Search Results for "${searchQuery}"`;
+    }
     switch (currentSection) {
       case 'home':
         return 'Popular Movies';
@@ -141,7 +145,7 @@ function App() {
             {getSectionTitle()}
           </h2>
           <p className="text-gray-600">
-            {searchQuery
+            {searchQuery && currentSection === 'search'
               ? `Found ${movies.length} results`
               : 'Discover your next favorite movie'}
           </p>
@@ -149,6 +153,17 @@ function App() {
 
         {loading ? (
           <LoadingSpinner />
+        ) : movies.length === 0 && searchQuery && currentSection === 'search' ? (
+          <div className="text-center py-12">
+            <div className="text-gray-500 text-lg mb-2">No movies found for "{searchQuery}"</div>
+            <div className="text-gray-400 mb-4">Try searching for a different movie title</div>
+            <button
+              onClick={() => handleSearch('')}
+              className="text-red-600 hover:text-red-700 font-medium transition-colors"
+            >
+              Clear search and browse all movies
+            </button>
+          </div>
         ) : (
           <MovieGrid movies={movies} onMovieClick={handleMovieClick} />
         )}

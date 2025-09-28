@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, Calendar, Eye } from 'lucide-react';
 import { Movie } from '../types/movie';
+import { movieService } from '../services/movieService';
 
 interface MovieCardProps {
   movie: Movie;
@@ -8,6 +9,8 @@ interface MovieCardProps {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
+  const userRating = movieService.getUserRating(movie.id);
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).getFullYear();
   };
@@ -34,6 +37,14 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
           <Star className="w-3 h-3 text-yellow-400 fill-current" />
           <span className="text-white text-xs font-medium">{formatRating(movie.vote_average)}</span>
         </div>
+        
+        {/* User Rating Badge */}
+        {userRating > 0 && (
+          <div className="absolute top-3 left-3 bg-red-600 backdrop-blur-sm rounded-full px-2 py-1 flex items-center space-x-1">
+            <Star className="w-3 h-3 text-white fill-current" />
+            <span className="text-white text-xs font-medium">{userRating}</span>
+          </div>
+        )}
 
         {/* Hover Overlay */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -69,6 +80,13 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
               <span className="font-semibold text-gray-900">{formatRating(movie.vote_average)}</span>
               <span className="text-gray-500 text-sm">/10</span>
             </div>
+            {userRating > 0 && (
+              <div className="flex items-center space-x-1 text-red-600">
+                <span className="text-sm">Your rating:</span>
+                <Star className="w-4 h-4 fill-current" />
+                <span className="font-semibold">{userRating}</span>
+              </div>
+            )}
           </div>
           
           <button className="text-red-600 hover:text-red-700 font-medium text-sm transition-colors">

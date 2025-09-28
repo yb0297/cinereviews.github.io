@@ -13,11 +13,19 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
 
   const handleInputChange = (value: string) => {
     setSearchQuery(value);
-    onSearch(value); // Real-time search
+    
+    // Debounced search - only search after user stops typing
     if (value.trim()) {
-      onNavigate('search'); // switch to search section
+      onSearch(value);
     } else {
-      onNavigate('home'); // go back to home if empty
+      onSearch(''); // Clear search results
+    }
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      onSearch(searchQuery.trim());
     }
   };
 
@@ -63,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
 
           {/* Search Bar */}
           <div className="hidden sm:flex items-center">
-            <div className="relative">
+            <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
                 value={searchQuery}
@@ -72,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
                 className="bg-gray-800 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-gray-700 transition-colors"
               />
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-            </div>
+            </form>
           </div>
 
           {/* Mobile Menu Button */}
@@ -108,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
 
               {/* Mobile Search */}
               <div className="pt-2">
-                <div className="relative">
+                <form onSubmit={handleSearchSubmit} className="relative">
                   <input
                     type="text"
                     value={searchQuery}
@@ -117,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
                     className="bg-gray-800 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-gray-700 transition-colors"
                   />
                   <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                </div>
+                </form>
               </div>
             </div>
           </div>
