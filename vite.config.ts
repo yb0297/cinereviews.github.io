@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: '/cinereviews.github.io/', // required for GitHub Pages
+  base: '/', // root for Netlify
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
@@ -12,6 +12,6 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
-    minify: 'terser', // or "esbuild" if you want faster builds
+    minify: 'esbuild', // faster & default; no need for terser
   },
 });
