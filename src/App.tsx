@@ -4,6 +4,8 @@ import { HeroSection } from './components/HeroSection';
 import { MovieGrid } from './components/MovieGrid';
 import { MovieModal } from './components/MovieModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { AdBanner } from './components/AdBanner';
+import { AdSidebar } from './components/AdSidebar';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
@@ -138,35 +140,71 @@ function App() {
         />
       )}
 
+      {/* Top Banner Ad */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="bg-gray-50 rounded-lg p-4">
+          <p className="text-xs text-gray-500 mb-2 text-center">Advertisement</p>
+          <AdBanner
+            adSlot="1234567892"
+            style={{ display: 'block', width: '100%', height: '90px' }}
+            className="mx-auto"
+          />
+        </div>
+      </div>
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            {getSectionTitle()}
-          </h2>
-          <p className="text-gray-600">
-            {searchQuery && currentSection === 'search'
-              ? `Found ${movies.length} results`
-              : 'Discover your next favorite movie'}
-          </p>
-        </div>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main Content Area */}
+          <div className="flex-1">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                {getSectionTitle()}
+              </h2>
+              <p className="text-gray-600">
+                {searchQuery && currentSection === 'search'
+                  ? `Found ${movies.length} results`
+                  : 'Discover your next favorite movie'}
+              </p>
+            </div>
 
-        {loading ? (
-          <LoadingSpinner />
-        ) : movies.length === 0 && searchQuery && currentSection === 'search' ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-2">No movies found for "{searchQuery}"</div>
-            <div className="text-gray-400 mb-4">Try searching for a different movie title</div>
-            <button
-              onClick={() => handleSearch('')}
-              className="text-red-600 hover:text-red-700 font-medium transition-colors"
-            >
-              Clear search and browse all movies
-            </button>
+            {loading ? (
+              <LoadingSpinner />
+            ) : movies.length === 0 && searchQuery && currentSection === 'search' ? (
+              <div className="text-center py-12">
+                <div className="text-gray-500 text-lg mb-2">No movies found for "{searchQuery}"</div>
+                <div className="text-gray-400 mb-4">Try searching for a different movie title</div>
+                <button
+                  onClick={() => handleSearch('')}
+                  className="text-red-600 hover:text-red-700 font-medium transition-colors"
+                >
+                  Clear search and browse all movies
+                </button>
+              </div>
+            ) : (
+              <>
+                <MovieGrid movies={movies} onMovieClick={handleMovieClick} />
+                
+                {/* In-content Ad */}
+                {movies.length > 4 && (
+                  <div className="my-12 bg-gray-50 rounded-lg p-4">
+                    <p className="text-xs text-gray-500 mb-2 text-center">Advertisement</p>
+                    <AdBanner
+                      adSlot="1234567893"
+                      style={{ display: 'block', width: '100%', height: '250px' }}
+                      className="mx-auto"
+                    />
+                  </div>
+                )}
+              </>
+            )}
           </div>
-        ) : (
-          <MovieGrid movies={movies} onMovieClick={handleMovieClick} />
-        )}
+          
+          {/* Sidebar with Ads */}
+          <div className="lg:w-80 flex-shrink-0">
+            <AdSidebar />
+          </div>
+        </div>
       </main>
 
       {/* Movie Modal */}

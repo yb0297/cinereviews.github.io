@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Star, Calendar, Clock, Play, Heart, Share2, Bookmark } from 'lucide-react';
 import { Movie } from '../types/movie';
-import { movieService } from '../services/movieService';
+import { AdBanner } from './AdBanner';
 
 interface MovieModalProps {
   movie: Movie | null;
@@ -11,19 +11,8 @@ interface MovieModalProps {
 
 export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'cast'>('overview');
-  const [userRating, setUserRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [showRatingSuccess, setShowRatingSuccess] = useState(false);
-
-  // Load user rating when movie changes
-  React.useEffect(() => {
-    if (movie) {
-      const savedRating = movieService.getUserRating(movie.id);
-      setUserRating(savedRating);
-    }
-  }, [movie]);
 
   if (!isOpen || !movie) return null;
 
@@ -33,20 +22,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose }
       month: 'long',
       day: 'numeric'
     });
-  };
-
-  const handleRatingClick = (rating: number) => {
-    setUserRating(rating);
-    movieService.setUserRating(movie.id, rating);
-    setShowRatingSuccess(true);
-    setTimeout(() => setShowRatingSuccess(false), 2000);
-  };
-
-  const handleRatingRemove = () => {
-    setUserRating(0);
-    movieService.removeUserRating(movie.id);
-    setShowRatingSuccess(true);
-    setTimeout(() => setShowRatingSuccess(false), 2000);
   };
 
   const mockReviews = [
@@ -178,6 +153,16 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose }
                 <div>
                   <p className="text-gray-700 leading-relaxed mb-6">{movie.overview}</p>
                   
+                  {/* In-modal Ad */}
+                  <div className="my-6 bg-gray-50 rounded-lg p-4">
+                    <p className="text-xs text-gray-500 mb-2 text-center">Advertisement</p>
+                    <AdBanner
+                      adSlot="1234567894"
+                      style={{ display: 'block', width: '100%', height: '200px' }}
+                      className="mx-auto"
+                    />
+                  </div>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-2">Movie Details</h4>
@@ -202,49 +187,10 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose }
                     </div>
                     
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Your Rating</h4>
-                      <div className="flex items-center space-x-1 mb-2">
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
-                          <button
-                            key={rating}
-                            onClick={() => handleRatingClick(rating)}
-                            onMouseEnter={() => setHoverRating(rating)}
-                            onMouseLeave={() => setHoverRating(0)}
-                            className={`w-6 h-6 ${
-                              rating <= (hoverRating || userRating) 
-                                ? 'text-yellow-400' 
-                                : 'text-gray-300'
-                            } hover:text-yellow-400`}
-                          >
-                            <Star className="w-full h-full fill-current" />
-                          </button>
-                        ))}
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        {userRating > 0 ? (
-                          <p className="text-sm text-gray-600">
-                            You rated this movie <span className="font-semibold text-yellow-600">{userRating}/10</span>
-                          </p>
-                        ) : (
-                          <p className="text-sm text-gray-500">Click stars to rate this movie</p>
-                        )}
-                        
-                        {userRating > 0 && (
-                          <button
-                            onClick={handleRatingRemove}
-                            className="text-xs text-red-600 hover:text-red-700 transition-colors"
-                          >
-                            Remove Rating
-                          </button>
-                        )}
-                      </div>
-                      
-                      {showRatingSuccess && (
-                        <div className="mt-2 p-2 bg-green-100 text-green-700 text-sm rounded-md">
-                          {userRating > 0 ? 'Rating saved!' : 'Rating removed!'}
-                        </div>
-                      )}
+                      <h4 className="font-semibold text-gray-900 mb-2">Additional Info</h4>
+                      <p className="text-sm text-gray-600">
+                        More movie information and features coming soon.
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* AdSense Styles */
+.ad-container {
+  @apply flex justify-center items-center;
+}
+
+.adsbygoogle {
+  @apply block;
+}
+
+/* Responsive ad adjustments */
+@media (max-width: 768px) {
+  .ad-container .adsbygoogle {
+    max-width: 100%;
+    height: auto !important;
+  }
+}

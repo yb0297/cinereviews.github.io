@@ -27,9 +27,6 @@ const mockGenres: Genre[] = [
   { id: 53, name: "Thriller" },
 ];
 
-// User ratings storage (in a real app, this would be in a database)
-const userRatings: { [movieId: number]: number } = {};
-
 export const movieService = {
   async getPopularMovies(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
@@ -95,24 +92,5 @@ export const movieService = {
   async getGenres(): Promise<Genre[]> {
     await new Promise(res => setTimeout(res, 100));
     return mockGenres;
-  },
-
-  // User rating functions
-  getUserRating(movieId: number): number {
-    return userRatings[movieId] || 0;
-  },
-
-  setUserRating(movieId: number, rating: number): void {
-    if (rating >= 0 && rating <= 10) {
-      userRatings[movieId] = rating;
-    }
-  },
-
-  removeUserRating(movieId: number): void {
-    delete userRatings[movieId];
-  },
-
-  getAllUserRatings(): { [movieId: number]: number } {
-    return { ...userRatings };
   }
 };
