@@ -111,7 +111,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
           {/* Comments */}
           {activeTab === 'comments' && (
             <div>
-              <h3 className="text-xl font-semibold mb-4">Leave a Comment</h3>
+              <h3 className="text-xl font-semibold mb-4">Leave a Comment(Will be added after verification soon)</h3>
 
               {user ? (
                 <form
@@ -126,7 +126,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                       htmlFor="fc-name"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Full Name
+                      Your Name
                     </label>
                     <input
                       type="text"
