@@ -13,6 +13,8 @@ import { ContactForm } from './components/ContactForm';
 import { ProfileModal } from './components/ProfileModal';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
+// Import sample reviews setup for demonstration
+import './services/sampleReviewsSetup';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
