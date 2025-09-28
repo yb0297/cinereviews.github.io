@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Star, Calendar } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
@@ -12,6 +12,13 @@ interface MovieModalProps {
   onAuthRequired: () => void;
 }
 
+interface Comment {
+  id: string;
+  name: string;
+  message: string;
+  created_at: string;
+}
+
 export const MovieModal: React.FC<MovieModalProps> = ({
   movie,
   isOpen,
@@ -19,9 +26,30 @@ export const MovieModal: React.FC<MovieModalProps> = ({
   user,
   onAuthRequired,
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'comments' | 'cast'>(
-    'overview'
-  );
+  const [activeTab, setActiveTab] = useState<'overview' | 'leave' | 'view' | 'cast'>('overview');
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  // 🔹 Example: replace this with Formcarry API fetch
+  useEffect(() => {
+    if (activeTab === 'view') {
+      // TODO: Replace with real Formcarry API call
+      // For now, using mock comments
+      setComments([
+        {
+          id: '1',
+          name: 'Alice',
+          message: 'Loved this movie! ❤️',
+          created_at: '2025-09-25',
+        },
+        {
+          id: '2',
+          name: 'John',
+          message: 'Great acting and visuals!',
+          created_at: '2025-09-26',
+        },
+      ]);
+    }
+  }, [activeTab]);
 
   if (!isOpen || !movie) return null;
 
@@ -42,36 +70,25 @@ export const MovieModal: React.FC<MovieModalProps> = ({
         {/* Tabs */}
         <div className="border-b">
           <div className="flex space-x-8 px-6">
-            <button
-              onClick={() => setActiveTab('overview')}
-              className={`py-4 border-b-2 font-medium text-sm ${
-                activeTab === 'overview'
-                  ? 'border-red-500 text-red-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Overview
-            </button>
-            <button
-              onClick={() => setActiveTab('comments')}
-              className={`py-4 border-b-2 font-medium text-sm ${
-                activeTab === 'comments'
-                  ? 'border-red-500 text-red-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Comments
-            </button>
-            <button
-              onClick={() => setActiveTab('cast')}
-              className={`py-4 border-b-2 font-medium text-sm ${
-                activeTab === 'cast'
-                  ? 'border-red-500 text-red-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Cast
-            </button>
+            {['overview', 'leave', 'view', 'cast'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab as any)}
+                className={`py-4 border-b-2 font-medium text-sm ${
+                  activeTab === tab
+                    ? 'border-red-500 text-red-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {tab === 'overview'
+                  ? 'Overview'
+                  : tab === 'leave'
+                  ? 'Leave Comment'
+                  : tab === 'view'
+                  ? 'View Comments'
+                  : 'Cast'}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -108,10 +125,10 @@ export const MovieModal: React.FC<MovieModalProps> = ({
             </div>
           )}
 
-          {/* Comments */}
-          {activeTab === 'comments' && (
+          {/* Leave Comment */}
+          {activeTab === 'leave' && (
             <div>
-              <h3 className="text-xl font-semibold mb-4">Leave a Comment(Will be added after verification soon)</h3>
+              <h3 className="text-xl font-semibold mb-4">Leave a Comment</h3>
 
               {user ? (
                 <form
@@ -120,13 +137,12 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                   encType="multipart/form-data"
                   className="space-y-4 max-w-md"
                 >
-                  {/* Name */}
                   <div>
                     <label
                       htmlFor="fc-name"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Your Name
+                      Full Name
                     </label>
                     <input
                       type="text"
@@ -138,7 +154,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                     />
                   </div>
 
-                  {/* Email */}
                   <div>
                     <label
                       htmlFor="fc-email"
@@ -156,7 +171,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                     />
                   </div>
 
-                  {/* Message */}
                   <div>
                     <label
                       htmlFor="fc-message"
@@ -174,7 +188,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                     />
                   </div>
 
-                  {/* Submit */}
                   <div>
                     <button
                       type="submit"
@@ -194,6 +207,37 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                     Sign In
                   </button>
                 </div>
+              )}
+
+              <AdBanner />
+            </div>
+          )}
+
+          {/* View Comments */}
+          {activeTab === 'view' && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">All Comments</h3>
+              {comments.length > 0 ? (
+                <div className="space-y-4">
+                  {comments.map((c) => (
+                    <div
+                      key={c.id}
+                      className="bg-gray-50 p-4 rounded-lg shadow-sm"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-semibold text-gray-800">
+                          {c.name}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {c.created_at}
+                        </span>
+                      </div>
+                      <p className="text-gray-700">{c.message}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No comments yet. Be the first!</p>
               )}
 
               <AdBanner />
