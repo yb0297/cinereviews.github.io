@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { movieService } from "../services/movieService.tsx";
+import { movieService } from "../services/movieService"; // Remove .tsx
+
+type Comment = {
+  id: number;
+  author: string;
+  text: string;
+};
 
 type MovieTabsProps = {
   movieId: number;
@@ -8,16 +14,24 @@ type MovieTabsProps = {
 
 export default function MovieTabs({ movieId, overview }: MovieTabsProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "comments">("overview");
-  const [comments, setComments] = useState<{ id: number; author: string; text: string }[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (activeTab === "comments") {
       setLoading(true);
-      movieService.getComments(movieId).then((data) => {
-        setComments(data);
-        setLoading(false);
-      });
+      movieService
+        .getComments(movieId)
+        .then((data: Comment[]) => {
+          setComments(data);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch comments:", err);
+          setComments([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [activeTab, movieId]);
 
