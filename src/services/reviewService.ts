@@ -1,6 +1,7 @@
 import { Review, ReviewFormData } from '../types/review';
 import { supabase } from '../lib/supabase';
 import { fallbackReviewService } from './fallbackReviewService';
+import { sharedDatabaseService } from './sharedDatabaseService';
 
 export const reviewService = {
   async getReviewsForMovie(movieId: number): Promise<Review[]> {
@@ -19,8 +20,8 @@ export const reviewService = {
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.warn('Supabase error, using fallback storage:', error);
-        return fallbackReviewService.getReviewsForMovie(movieId);
+        console.warn('Supabase error, using shared database:', error);
+        return sharedDatabaseService.getReviewsForMovie(movieId);
       }
 
       // Transform the data to include user information
@@ -30,8 +31,8 @@ export const reviewService = {
         user_avatar: review.profiles?.avatar_url || null
       }));
     } catch (error) {
-      console.warn('Database connection failed, using fallback storage:', error);
-      return fallbackReviewService.getReviewsForMovie(movieId);
+      console.warn('Database connection failed, using shared database:', error);
+      return sharedDatabaseService.getReviewsForMovie(movieId);
     }
   },
 
@@ -81,8 +82,8 @@ export const reviewService = {
           throw new Error('User must be authenticated to create a review');
         }
         
-        // Use fallback service for simple auth
-        return fallbackReviewService.createReview(
+        // Use shared database for simple auth
+        return sharedDatabaseService.createReview(
           movieId, 
           movieTitle, 
           reviewData, 
@@ -110,8 +111,8 @@ export const reviewService = {
         .single();
 
       if (error) {
-        console.warn('Supabase error, using fallback storage:', error);
-        return fallbackReviewService.createReview(
+        console.warn('Supabase error, using shared database:', error);
+        return sharedDatabaseService.createReview(
           movieId, 
           movieTitle, 
           reviewData, 
@@ -126,11 +127,11 @@ export const reviewService = {
         user_avatar: data.profiles?.avatar_url || null
       };
     } catch (error) {
-      console.warn('Database connection failed, using fallback storage:', error);
+      console.warn('Database connection failed, using shared database:', error);
       const { simpleAuth } = await import('../lib/simpleAuth');
       const simpleUser = simpleAuth.getCurrentUser();
       if (simpleUser) {
-        return fallbackReviewService.createReview(
+        return sharedDatabaseService.createReview(
           movieId, 
           movieTitle, 
           reviewData, 
@@ -154,8 +155,8 @@ export const reviewService = {
           throw new Error('User must be authenticated to update a review');
         }
         
-        // Use fallback service for simple auth
-        return fallbackReviewService.updateReview(reviewId, 0, simpleUser.id, reviewData); // movieId will be determined in fallback
+        // Use shared database for simple auth
+        return sharedDatabaseService.updateReview(reviewId, reviewData, simpleUser.id);
       }
 
       const { data, error } = await supabase
@@ -177,11 +178,11 @@ export const reviewService = {
         .single();
 
       if (error) {
-        console.warn('Supabase error, using fallback storage:', error);
+        console.warn('Supabase error, using shared database:', error);
         const { simpleAuth } = await import('../lib/simpleAuth');
         const simpleUser = simpleAuth.getCurrentUser();
         if (simpleUser) {
-          return fallbackReviewService.updateReview(reviewId, 0, simpleUser.id, reviewData);
+          return sharedDatabaseService.updateReview(reviewId, reviewData, simpleUser.id);
         }
         throw error;
       }
@@ -192,11 +193,11 @@ export const reviewService = {
         user_avatar: data.profiles?.avatar_url || null
       };
     } catch (error) {
-      console.warn('Database connection failed, using fallback storage:', error);
+      console.warn('Database connection failed, using shared database:', error);
       const { simpleAuth } = await import('../lib/simpleAuth');
       const simpleUser = simpleAuth.getCurrentUser();
       if (simpleUser) {
-        return fallbackReviewService.updateReview(reviewId, 0, simpleUser.id, reviewData);
+        return sharedDatabaseService.updateReview(reviewId, reviewData, simpleUser.id);
       }
       throw error;
     }
@@ -214,8 +215,8 @@ export const reviewService = {
           throw new Error('User must be authenticated to delete a review');
         }
         
-        // Use fallback service for simple auth
-        return fallbackReviewService.deleteReview(reviewId, 0, simpleUser.id); // movieId will be determined in fallback
+        // Use shared database for simple auth
+        return sharedDatabaseService.deleteReview(reviewId, simpleUser.id);
       }
 
       const { error } = await supabase
@@ -225,22 +226,22 @@ export const reviewService = {
         .eq('user_id', user.id);
 
       if (error) {
-        console.warn('Supabase error, using fallback storage:', error);
+        console.warn('Supabase error, using shared database:', error);
         const { simpleAuth } = await import('../lib/simpleAuth');
         const simpleUser = simpleAuth.getCurrentUser();
         if (simpleUser) {
-          return fallbackReviewService.deleteReview(reviewId, 0, simpleUser.id);
+          return sharedDatabaseService.deleteReview(reviewId, simpleUser.id);
         }
         throw error;
       }
 
       return true;
     } catch (error) {
-      console.warn('Database connection failed, using fallback storage:', error);
+      console.warn('Database connection failed, using shared database:', error);
       const { simpleAuth } = await import('../lib/simpleAuth');
       const simpleUser = simpleAuth.getCurrentUser();
       if (simpleUser) {
-        return fallbackReviewService.deleteReview(reviewId, 0, simpleUser.id);
+        return sharedDatabaseService.deleteReview(reviewId, simpleUser.id);
       }
       throw error;
     }
@@ -273,8 +274,8 @@ export const reviewService = {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        console.warn('Supabase error, using fallback storage:', error);
-        return fallbackReviewService.getUserReviewForMovie(movieId, user.id);
+        console.warn('Supabase error, using shared database:', error);
+        return sharedDatabaseService.getUserReviewForMovie(movieId, user.id);
       }
 
       if (!data) return null;
@@ -285,11 +286,11 @@ export const reviewService = {
         user_avatar: data.profiles?.avatar_url || null
       };
     } catch (error) {
-      console.warn('Database connection failed, using fallback storage:', error);
+      console.warn('Database connection failed, using shared database:', error);
       const { simpleAuth } = await import('../lib/simpleAuth');
       const simpleUser = simpleAuth.getCurrentUser();
       if (simpleUser) {
-        return fallbackReviewService.getUserReviewForMovie(movieId, simpleUser.id);
+        return sharedDatabaseService.getUserReviewForMovie(movieId, simpleUser.id);
       }
       return null;
     }
