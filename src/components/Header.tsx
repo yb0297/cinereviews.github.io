@@ -11,11 +11,13 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      onSearch(searchQuery.trim());
-      onNavigate('search');
+  const handleInputChange = (value: string) => {
+    setSearchQuery(value);
+    onSearch(value); // Real-time search
+    if (value.trim()) {
+      onNavigate('search'); // switch to search section
+    } else {
+      onNavigate('home'); // go back to home if empty
     }
   };
 
@@ -60,18 +62,18 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
           </nav>
 
           {/* Search Bar */}
-          <form onSubmit={handleSearch} className="hidden sm:flex items-center">
+          <div className="hidden sm:flex items-center">
             <div className="relative">
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleInputChange(e.target.value)}
                 placeholder="Search movies..."
                 className="bg-gray-800 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-gray-700 transition-colors"
               />
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
             </div>
-          </form>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -103,20 +105,20 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
                   <span>{label}</span>
                 </button>
               ))}
-              
+
               {/* Mobile Search */}
-              <form onSubmit={handleSearch} className="pt-2">
+              <div className="pt-2">
                 <div className="relative">
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => handleInputChange(e.target.value)}
                     placeholder="Search movies..."
                     className="bg-gray-800 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-gray-700 transition-colors"
                   />
                   <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         )}
