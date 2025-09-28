@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Star, Calendar } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
@@ -27,29 +27,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
   onAuthRequired,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'leave' | 'view' | 'cast'>('overview');
-  const [comments, setComments] = useState<Comment[]>([]);
-
-  // 🔹 Example: replace this with Formcarry API fetch
-  useEffect(() => {
-    if (activeTab === 'view') {
-      // TODO: Replace with real Formcarry API call
-      // For now, using mock comments
-      setComments([
-        {
-          id: '1',
-          name: 'Alice',
-          message: 'Loved this movie! ❤️',
-          created_at: '2025-09-25',
-        },
-        {
-          id: '2',
-          name: 'John',
-          message: 'Great acting and visuals!',
-          created_at: '2025-09-26',
-        },
-      ]);
-    }
-  }, [activeTab]);
+  const [comments, setComments] = useState<Comment[]>([]); // <- will be filled from your global logic later
 
   if (!isOpen || !movie) return null;
 
