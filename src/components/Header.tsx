@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Search, Film, Menu, X, Star, TrendingUp, Clock, Play, Tv, User } from 'lucide-react';
+import { Search, Film, Menu, X, Star, TrendingUp, Clock, Play, Tv, User, Settings } from 'lucide-react';
+import { AdminCommentPanel } from './AdminCommentPanel';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface HeaderProps {
@@ -13,6 +14,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSection, user, onAuthClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
 
   const handleInputChange = (value: string) => {
     setSearchQuery(value);
@@ -92,6 +94,14 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
           {/* User Profile */}
           <div className="hidden sm:flex items-center">
             <button
+              onClick={() => setIsAdminPanelOpen(true)}
+              className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-all duration-200 hover:scale-105 mr-3"
+              title="Manage Comments"
+            >
+              <Settings className="w-4 h-4" />
+              <span className="text-sm">Admin</span>
+            </button>
+            <button
               onClick={onAuthClick}
               className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105 group"
             >
@@ -159,6 +169,16 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
               <div className="pt-2">
                 <button
                   onClick={() => {
+                    setIsAdminPanelOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center space-x-2 w-full bg-gray-800 hover:bg-gray-700 text-white px-3 py-2 rounded-lg transition-colors mb-2"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span className="text-sm">Manage Comments</span>
+                </button>
+                <button
+                  onClick={() => {
                     onAuthClick();
                     setIsMenuOpen(false);
                   }}
@@ -182,6 +202,12 @@ export const Header: React.FC<HeaderProps> = ({ onSearch, onNavigate, currentSec
           </div>
         )}
       </div>
+
+      {/* Admin Comment Panel */}
+      <AdminCommentPanel
+        isOpen={isAdminPanelOpen}
+        onClose={() => setIsAdminPanelOpen(false)}
+      />
     </header>
   );
 };
