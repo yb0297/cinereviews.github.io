@@ -14,7 +14,11 @@ const mockMovies: Movie[] = [
   { id: 10, title: "Spider-Man: No Way Home", poster_path: "https://images.pexels.com/photos/7991567/pexels-photo-7991567.jpeg?auto=compress&cs=tinysrgb&w=400", backdrop_path: "https://images.pexels.com/photos/7991567/pexels-photo-7991567.jpeg?auto=compress&cs=tinysrgb&w=1200", overview: "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.", release_date: "2021-12-17", vote_average: 8.2, vote_count: 21000, genre_ids: [28, 12, 878] },
   { id: 11, title: "Black Panther", poster_path: "https://images.pexels.com/photos/7991678/pexels-photo-7991678.jpeg?auto=compress&cs=tinysrgb&w=400", backdrop_path: "https://images.pexels.com/photos/7991678/pexels-photo-7991678.jpeg?auto=compress&cs=tinysrgb&w=1200", overview: "T'Challa, heir to the hidden but advanced kingdom of Wakanda, must step forward to lead his people into a new future and must confront a challenger from his country's past.", release_date: "2018-02-16", vote_average: 7.3, vote_count: 17000, genre_ids: [28, 12, 18] },
   { id: 12, title: "Top Gun: Maverick", poster_path: "https://images.pexels.com/photos/7991789/pexels-photo-7991789.jpeg?auto=compress&cs=tinysrgb&w=400", backdrop_path: "https://images.pexels.com/photos/7991789/pexels-photo-7991789.jpeg?auto=compress&cs=tinysrgb&w=1200", overview: "After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN's elite graduates on a mission.", release_date: "2022-05-27", vote_average: 8.3, vote_count: 16000, genre_ids: [28, 18] },
+  { id: 12, title: "Top Gun: Maverick", poster_path: "https://images.pexels.com/photos/7991789/pexels-photo-7991789.jpeg?auto=compress&cs=tinysrgb&w=400", backdrop_path: "https://images.pexels.com/photos/7991789/pexels-photo-7991789.jpeg?auto=compress&cs=tinysrgb&w=1200", overview: "After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN's elite graduates on a mission.", release_date: "2022-05-27", vote_average: 8.3, vote_count: 16000, genre_ids: [28, 18] },
 ];
+
+];
+
 
 const mockGenres: Genre[] = [
   { id: 28, name: "Action" },
