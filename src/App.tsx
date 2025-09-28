@@ -1,21 +1,20 @@
 import { useState, useEffect } from 'react';
-import { supabase } from './lib/supabase';
-import type { User } from '@supabase/supabase-js';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { MovieGrid } from './components/MovieGrid';
 import { MovieModal } from './components/MovieModal';
-import { AuthModal } from './components/AuthModal';
+import { SimpleAuthModal } from './components/SimpleAuthModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { AdBanner } from './components/AdBanner';
 import { AdSidebar } from './components/AdSidebar';
 import { ContactForm } from './components/ContactForm';
 import { ProfileModal } from './components/ProfileModal';
 import { movieService } from './services/movieService';
+import { simpleAuth, SimpleUser } from './lib/simpleAuth';
 import { Movie } from './types/movie';
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SimpleUser | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [currentSection, setCurrentSection] = useState('home');
@@ -28,17 +27,9 @@ function App() {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
 
   useEffect(() => {
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }: any) => {
-      setUser(session?.user ?? null);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event: any, session: any) => {
-        setUser(session?.user ?? null);
-      }
-    );
+    // Check for existing user
+    const currentUser = simpleAuth.getCurrentUser();
+    setUser(currentUser);
 
     loadMovies();
     
@@ -47,7 +38,6 @@ function App() {
     window.addEventListener('openContactForm', handleOpenContactForm);
     
     return () => {
-      subscription.unsubscribe();
       window.removeEventListener('openContactForm', handleOpenContactForm);
     };
   }, []);
@@ -277,11 +267,13 @@ function App() {
       />
 
       {/* Auth Modal */}
-      <AuthModal
+      <SimpleAuthModal
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
-        user={user}
-        onAuthChange={setUser}
+        onAuthSuccess={(username: string) => {
+          const newUser = simpleAuth.setUser(username);
+          setUser(newUser);
+        }}
       />
 
       {/* Profile Modal */}
@@ -289,6 +281,10 @@ function App() {
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
         user={user}
+        onSignOut={() => {
+          simpleAuth.signOut();
+          setUser(null);
+        }}
       />
 
       {/* Contact Form Modal */}

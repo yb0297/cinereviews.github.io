@@ -4,13 +4,13 @@ import { Movie } from '../types/movie';
 import { Review, ReviewFormData } from '../types/review';
 import { reviewService } from '../services/reviewService';
 import { AdBanner } from './AdBanner';
-import type { User } from '@supabase/supabase-js';
+import { SimpleUser } from '../lib/simpleAuth';
 
 interface MovieModalProps {
   movie: Movie | null;
   isOpen: boolean;
   onClose: () => void;
-  user: User | null;
+  user: SimpleUser | null;
   onAuthRequired: () => void;
 }
 
