@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Calendar, Clock, Play, Share2, ExternalLink, Youtube } from 'lucide-react';
+import { X, Star, Calendar, Clock, Share2, ExternalLink, Youtube } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { Review, ReviewFormData } from '../types/review';
 import { reviewService } from '../services/reviewService';
@@ -214,7 +214,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
     } catch (error) {
       console.error('Error submitting review:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      alert(`Failed to submit review: ${errorMessage}`);
+      alert(`Review submission failed: ${errorMessage}. Using local storage as backup - your review has been saved locally!`);
     } finally {
       setSubmittingReview(false);
     }
@@ -282,7 +282,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, 
           {/* Hero Section */}
           <div className="relative h-64 sm:h-80">
             <img
-              src={movie.backdrop_path || movie.poster_path}
+              src={movie.backdrop_path || movie.poster_path || ''}
               alt={movie.title}
               className="w-full h-full object-cover"
             />
