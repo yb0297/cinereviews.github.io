@@ -4,6 +4,13 @@
 CineReviews is a modern movie comment website built with React, TypeScript, Vite, and Tailwind CSS. Users can browse movies and leave YouTube-style comments. It features Supabase integration for authentication and database functionality.
 
 ## Recent Changes
+- **September 28, 2025**: Converted from review system to comment system
+  - Replaced complex review system (ratings, pros/cons, recommendations) with simple YouTube-style comments
+  - Updated database schema from reviews table to comments table
+  - Converted all API endpoints from review operations to comment operations
+  - Updated all frontend services and components to handle comments
+  - Comments are now simpler: just text content, user info, and timestamps
+  - Users can add, view, and delete their own comments when logged in
 - **September 28, 2025**: Initial Replit environment setup completed
   - Installed all project dependencies
   - Configured development workflow on port 5000
