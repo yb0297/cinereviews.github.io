@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 import { Header } from './components/Header';
@@ -13,8 +13,6 @@ import { ContactForm } from './components/ContactForm';
 import { ProfileModal } from './components/ProfileModal';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
-// Import sample reviews setup for demonstration
-import './services/sampleReviewsSetup';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -31,13 +29,13 @@ function App() {
 
   useEffect(() => {
     // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: any) => {
       setUser(session?.user ?? null);
     });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      (_event: any, session: any) => {
         setUser(session?.user ?? null);
       }
     );
