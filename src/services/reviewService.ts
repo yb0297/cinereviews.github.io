@@ -1,125 +1,221 @@
+import { supabase } from '../lib/supabase';
 import { Review, ReviewFormData } from '../types/review';
-import { enhancedReviewService } from './enhancedReviewService';
-import { databaseReviewService } from './databaseReviewService';
-import { simpleAuth } from '../lib/simpleAuth';
-
-// Initialize sample data (for both localStorage and database)
-let initialized = false;
-
-const initializeSampleData = async () => {
-  if (initialized) return;
-  initialized = true;
-  
-  // Try database first, then fall back to localStorage
-  if (databaseReviewService.isAvailable()) {
-    console.log('Database available, initializing sample data in database');
-    await databaseReviewService.initializeSampleData();
-  } else {
-    console.log('Database not available, initializing sample data in localStorage');
-    enhancedReviewService.initializeSampleData();
-  }
-};
-
-// Initialize on import
-initializeSampleData();
+import { fallbackReviewService } from './fallbackReviewService';
 
 export const reviewService = {
   async getReviewsForMovie(movieId: number): Promise<Review[]> {
-    // Try database first, then fall back to localStorage
-    if (databaseReviewService.isAvailable()) {
-      const dbReviews = await databaseReviewService.getReviewsForMovie(movieId);
-      if (dbReviews.length > 0 || !enhancedReviewService.getAllReviews().length) {
-        return dbReviews;
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select(`
+          *,
+          profiles (
+            full_name,
+            username,
+            avatar_url
+          )
+        `)
+        .eq('movie_id', movieId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.warn('Supabase error, using fallback storage:', error);
+        return fallbackReviewService.getReviewsForMovie(movieId);
       }
+
+      // Transform the data to include user information
+      return (data || []).map((review: any) => ({
+        ...review,
+        user_name: review.profiles?.full_name || review.profiles?.username || 'Anonymous User',
+        user_avatar: review.profiles?.avatar_url || null
+      }));
+    } catch (error) {
+      console.warn('Database connection failed, using fallback storage:', error);
+      return fallbackReviewService.getReviewsForMovie(movieId);
     }
-    
-    return enhancedReviewService.getReviewsForMovie(movieId);
   },
 
   async getUserReviews(userId?: string): Promise<Review[]> {
     let targetUserId = userId;
     
     if (!targetUserId) {
-      const user = simpleAuth.getCurrentUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
       targetUserId = user.id;
     }
 
-    // Try database first, then fall back to localStorage
-    if (databaseReviewService.isAvailable()) {
-      return await databaseReviewService.getUserReviews(targetUserId);
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        profiles (
+          full_name,
+          username,
+          avatar_url
+        )
+      `)
+      .eq('user_id', targetUserId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching user reviews:', error);
+      return [];
     }
-    
-    return enhancedReviewService.getUserReviews(targetUserId);
+
+    return (data || []).map((review: any) => ({
+      ...review,
+      user_name: review.profiles?.full_name || review.profiles?.username || 'Anonymous User',
+      user_avatar: review.profiles?.avatar_url || null
+    }));
   },
 
   async createReview(movieId: number, movieTitle: string, reviewData: ReviewFormData): Promise<Review | null> {
-    const user = simpleAuth.getCurrentUser();
+    const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
       throw new Error('User must be authenticated to create a review');
     }
 
-    // Try database first, then fall back to localStorage
-    if (databaseReviewService.isAvailable()) {
-      return await databaseReviewService.createReview(
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .insert({
+          user_id: user.id,
+          movie_id: movieId,
+          movie_title: movieTitle,
+          ...reviewData
+        })
+        .select(`
+          *,
+          profiles (
+            full_name,
+            username,
+            avatar_url
+          )
+        `)
+        .single();
+
+      if (error) {
+        console.warn('Supabase error, using fallback storage:', error);
+        return fallbackReviewService.createReview(
+          movieId, 
+          movieTitle, 
+          reviewData, 
+          user.id, 
+          user.user_metadata?.full_name || user.email || 'Anonymous User'
+        );
+      }
+
+      return {
+        ...data,
+        user_name: data.profiles?.full_name || data.profiles?.username || 'Anonymous User',
+        user_avatar: data.profiles?.avatar_url || null
+      };
+    } catch (error) {
+      console.warn('Database connection failed, using fallback storage:', error);
+      return fallbackReviewService.createReview(
         movieId, 
         movieTitle, 
         reviewData, 
         user.id, 
-        user.full_name
+        user.user_metadata?.full_name || user.email || 'Anonymous User'
       );
     }
-
-    return enhancedReviewService.createReview(
-      movieId, 
-      movieTitle, 
-      reviewData, 
-      user.id, 
-      user.full_name
-    );
   },
 
   async updateReview(reviewId: string, reviewData: Partial<ReviewFormData>): Promise<Review | null> {
-    const user = simpleAuth.getCurrentUser();
+    const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
       throw new Error('User must be authenticated to update a review');
     }
 
-    // Try database first, then fall back to localStorage
-    if (databaseReviewService.isAvailable()) {
-      return await databaseReviewService.updateReview(reviewId, reviewData, user.id);
+    const { data, error } = await supabase
+      .from('reviews')
+      .update({
+        ...reviewData,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', reviewId)
+      .eq('user_id', user.id)
+      .select(`
+        *,
+        profiles (
+          full_name,
+          username,
+          avatar_url
+        )
+      `)
+      .single();
+
+    if (error) {
+      console.error('Error updating review:', error);
+      throw error;
     }
 
-    return enhancedReviewService.updateReview(reviewId, reviewData, user.id);
+    return {
+      ...data,
+      user_name: data.profiles?.full_name || data.profiles?.username || 'Anonymous User',
+      user_avatar: data.profiles?.avatar_url || null
+    };
   },
 
   async deleteReview(reviewId: string): Promise<boolean> {
-    const user = simpleAuth.getCurrentUser();
+    const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
       throw new Error('User must be authenticated to delete a review');
     }
 
-    // Try database first, then fall back to localStorage
-    if (databaseReviewService.isAvailable()) {
-      return await databaseReviewService.deleteReview(reviewId, user.id);
+    const { error } = await supabase
+      .from('reviews')
+      .delete()
+      .eq('id', reviewId)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error deleting review:', error);
+      throw error;
     }
 
-    return enhancedReviewService.deleteReview(reviewId, user.id);
+    return true;
   },
 
   async getUserReviewForMovie(movieId: number): Promise<Review | null> {
-    const user = simpleAuth.getCurrentUser();
+    const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) return null;
 
-    // Try database first, then fall back to localStorage
-    if (databaseReviewService.isAvailable()) {
-      return await databaseReviewService.getUserReviewForMovie(movieId, user.id);
-    }
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select(`
+          *,
+          profiles (
+            full_name,
+            username,
+            avatar_url
+          )
+        `)
+        .eq('movie_id', movieId)
+        .eq('user_id', user.id)
+        .single();
 
-    return enhancedReviewService.getUserReviewForMovie(movieId, user.id);
+      if (error && error.code !== 'PGRST116') {
+        console.warn('Supabase error, using fallback storage:', error);
+        return fallbackReviewService.getUserReviewForMovie(movieId, user.id);
+      }
+
+      if (!data) return null;
+
+      return {
+        ...data,
+        user_name: data.profiles?.full_name || data.profiles?.username || 'Anonymous User',
+        user_avatar: data.profiles?.avatar_url || null
+      };
+    } catch (error) {
+      console.warn('Database connection failed, using fallback storage:', error);
+      return fallbackReviewService.getUserReviewForMovie(movieId, user.id);
+    }
   }
 };

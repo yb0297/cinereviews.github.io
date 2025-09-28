@@ -4,13 +4,12 @@ import { profileService } from '../services/profileService';
 import { reviewService } from '../services/reviewService';
 import { Profile, ProfileFormData } from '../types/profile';
 import { Review } from '../types/review';
-import { SimpleUser } from '../lib/simpleAuth';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface ProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: SimpleUser | null;
-  onSignOut?: () => void;
+  user: SupabaseUser | null;
 }
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, user }) => {
