@@ -57,13 +57,25 @@ The built files will be in the `dist` directory.
 
 ## 🚀 Deployment
 
-This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+This project supports deployment to multiple platforms including Netlify, Vercel, and GitHub Pages.
+
+### Quick Setup
+1. Copy environment variables: `cp .env.example .env`
+2. Add your Supabase credentials to `.env`
+3. For production deployment, see [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+### Supported Platforms
+- **Netlify** (Recommended for automatic deployments)
+- **Vercel** (Great for React apps)
+- **GitHub Pages** (Free static hosting)
 
 ### Manual Deployment
-
 ```bash
-npm run deploy
+npm run deploy  # GitHub Pages
+npm run build   # Build for any platform
 ```
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## 📁 Project Structure
 
@@ -75,14 +87,28 @@ src/
 │   ├── MovieCard.tsx   # Individual movie cards
 │   ├── MovieGrid.tsx   # Movie grid layout
 │   ├── MovieModal.tsx  # Movie details modal
+│   ├── AuthModal.tsx   # Authentication modal
+│   ├── ProfileModal.tsx # User profile management
 │   └── LoadingSpinner.tsx # Loading component
+├── lib/                # External service configurations
+│   └── supabase.ts     # Supabase client setup
 ├── services/           # API services
-│   └── movieService.ts # Movie data service
+│   ├── movieService.ts # Movie data service
+│   ├── profileService.ts # User profile service
+│   └── reviewService.ts # Movie review service
 ├── types/              # TypeScript types
-│   └── movie.ts        # Movie-related types
+│   ├── movie.ts        # Movie-related types
+│   ├── profile.ts      # User profile types
+│   └── review.ts       # Review types
 ├── App.tsx             # Main app component
 ├── main.tsx            # App entry point
 └── index.css           # Global styles
+
+Configuration:
+├── .env.example        # Environment variables template
+├── DEPLOYMENT.md       # Deployment instructions
+├── vite.config.ts      # Vite configuration
+└── tailwind.config.js  # Tailwind CSS configuration
 ```
 
 ## 🎨 Features Overview
