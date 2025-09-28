@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, CreditCard as Edit3, Save, Calendar, Star, Film } from 'lucide-react';
 import { profileService } from '../services/profileService';
-import { reviewService } from '../services/reviewService';
+import { commentService } from '../services/commentService';
 import { Profile, ProfileFormData } from '../types/profile';
-import { Review } from '../types/review';
+import { Comment } from '../types/comment';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface ProfileModalProps {

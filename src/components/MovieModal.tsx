@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { X, Star, Calendar, Clock, Share2, ExternalLink, Youtube } from 'lucide-react';
 import { Movie } from '../types/movie';
-import { Review, ReviewFormData } from '../types/review';
-import { reviewService } from '../services/reviewService';
+import { Comment, CommentFormData } from '../types/comment';
+import { commentService } from '../services/commentService';
 import { simpleAuth } from '../lib/simpleAuth';
 import { AdBanner } from './AdBanner';
 import type { User } from '@supabase/supabase-js';
@@ -16,67 +16,50 @@ interface MovieModalProps {
 }
 
 export const MovieModal: React.FC<MovieModalProps> = ({ movie, isOpen, onClose, user, onAuthRequired }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'reviews' | 'cast'>('overview');
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [userReview, setUserReview] = useState<Review | null>(null);
-  const [loadingReviews, setLoadingReviews] = useState(false);
-  const [submittingReview, setSubmittingReview] = useState(false);
-  const [newReview, setNewReview] = useState<ReviewFormData>({
-    rating: 5,
-    title: '',
-    content: '',
-    pros: [''],
-    cons: [''],
-    recommendation: 'recommend' as const
+  const [activeTab, setActiveTab] = useState<'overview' | 'comments' | 'cast'>('overview');
+  const [showCommentForm, setShowCommentForm] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [userComments, setUserComments] = useState<Comment[]>([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [newComment, setNewComment] = useState<CommentFormData>({
+    content: ''
   });
 
-  // Load reviews when modal opens and reviews tab is active
+  // Load comments when modal opens and comments tab is active
   React.useEffect(() => {
-    if (isOpen && movie && activeTab === 'reviews') {
-      loadReviews();
+    if (isOpen && movie && activeTab === 'comments') {
+      loadComments();
     }
   }, [isOpen, movie, activeTab]);
 
-  // Load user's existing review
+  // Clear comment form when user logs out
   React.useEffect(() => {
-    if (isOpen && movie && (user || simpleAuth.getCurrentUser())) {
-      loadUserReview();
-    }
-    // Clear user review when user logs out
     if (!user && !simpleAuth.getCurrentUser()) {
-      setUserReview(null);
-      setNewReview({
-        rating: 5,
-        title: '',
-        content: '',
-        pros: [''],
-        cons: [''],
-        recommendation: 'recommend' as const
-      });
+      setNewComment({ content: '' });
     }
   }, [isOpen, movie, user]);
 
-  const loadReviews = async () => {
+  const loadComments = async () => {
     if (!movie) return;
     
-    setLoadingReviews(true);
+    setLoadingComments(true);
     try {
-      const movieReviews = await reviewService.getReviewsForMovie(movie.id);
-      setReviews(movieReviews);
+      const movieComments = await commentService.getCommentsForMovie(movie.id);
+      setComments(movieComments);
     } catch (error) {
-      console.error('Error loading reviews:', error);
+      console.error('Error loading comments:', error);
     } finally {
-      setLoadingReviews(false);
+      setLoadingComments(false);
     }
   };
 
-  const loadUserReview = async () => {
+  const loadUserComments = async () => {
     if (!movie) return;
     
     try {
-      const existingReview = await reviewService.getUserReviewForMovie(movie.id);
-      setUserReview(existingReview);
+      const existingComments = await commentService.getUserComments();
+      setUserComments(existingComments.filter(c => c.movie_id === movie.id));
       if (existingReview) {
         setNewReview({
           rating: existingReview.rating,

@@ -25,8 +25,8 @@ export const simpleAuth = {
     
     // Try to create profile in database if available
     try {
-      const { databaseReviewService } = await import('../services/databaseReviewService');
-      await databaseReviewService.ensureUserProfile(user.id, {
+      const { databaseCommentService } = await import('../services/databaseCommentService');
+      await databaseCommentService.ensureUserProfile(user.id, {
         username: user.username,
         full_name: user.full_name
       });
