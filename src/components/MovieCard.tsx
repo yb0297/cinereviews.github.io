@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Calendar, Heart, Bookmark, BookmarkCheck } from 'lucide-react';
+import { Star, Calendar, Heart, Bookmark, BookmarkCheck, Youtube } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { profileService } from '../services/profileService';
 import type { User } from '@supabase/supabase-js';
@@ -126,13 +126,13 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, user, onAu
           </div>
         )}
         
-        {/* Rating Badge */}
-        <div className="absolute top-4 right-4 bg-yellow-500 rounded-lg px-3 py-1 flex items-center space-x-1 shadow-lg">
+        {/* Rating Badge - Positioned above black ribbon */}
+        <div className="absolute top-1 right-4 bg-yellow-500 rounded-lg px-3 py-1 flex items-center space-x-1 shadow-lg z-30">
           <Star className="w-4 h-4 text-white fill-current" />
           <span className="text-white text-sm font-semibold">{formatRating(movie.vote_average)}</span>
         </div>
 
-        {/* Favorites & Watchlist Buttons */}
+        {/* Action Buttons */}
         <div className="absolute bottom-4 left-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button
             onClick={handleFavoriteToggle}
@@ -157,6 +157,20 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, user, onAu
           >
             {isInWatchlist ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
           </button>
+          
+          {/* View Gameplay Button for Games */}
+          {movie.isGame && movie.gameplayVideoLink && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(movie.gameplayVideoLink, '_blank');
+              }}
+              className="p-2 rounded-full bg-red-600 hover:bg-red-700 text-white shadow-lg transition-all duration-200"
+              title="View Gameplay Video"
+            >
+              <Youtube className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 

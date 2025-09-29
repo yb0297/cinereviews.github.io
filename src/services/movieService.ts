@@ -246,6 +246,7 @@ const games: Movie[] = [
     pros: ["Incredible Night City atmosphere", "Engaging main storyline", "Deep character customization", "Impressive graphics on high-end systems"],
     cons: ["Launch was buggy", "AI behavior can be inconsistent", "Some promised features missing", "Performance issues on older consoles"],
     buyLink: "https://store.steampowered.com/app/1091500/Cyberpunk_2077/",
+    gameplayVideoLink: "https://www.youtube.com/watch?v=BO8lX3hDU30",
     recommendedRequirements: {
       os: "Windows 10 64-bit",
       processor: "Intel Core i7-4790 or AMD Ryzen 3 3200G",
@@ -275,6 +276,7 @@ const games: Movie[] = [
     pros: ["Exceptional storytelling", "Massive open world", "Meaningful side quests", "Beautiful graphics and music"],
     cons: ["Combat system can feel clunky", "Overwhelming amount of content", "Steep learning curve for newcomers"],
     buyLink: "https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/",
+    gameplayVideoLink: "https://www.youtube.com/watch?v=c0i88t0Kacs",
     recommendedRequirements: {
       os: "Windows 10 64-bit",
       processor: "Intel CPU Core i7 3770 3.4 GHz or AMD CPU AMD FX-8350 4 GHz",
@@ -304,6 +306,7 @@ const games: Movie[] = [
     pros: ["Incredible attention to detail", "Immersive western atmosphere", "Strong narrative and characters", "Stunning visuals"],
     cons: ["Slow pacing may not suit everyone", "Controls can feel heavy", "Long missions with checkpoints"],
     buyLink: "https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/",
+    gameplayVideoLink: "https://www.youtube.com/watch?v=gmA6MrX81z4",
     recommendedRequirements: {
       os: "Windows 10 64-bit",
       processor: "Intel Core i7-4770K or AMD Ryzen 5 1500X",

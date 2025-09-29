@@ -24,24 +24,47 @@ export const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => 
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setIsSubmitting(false);
-    setSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        category: 'general'
+    try {
+      // Submit to FormCarry
+      const response = await fetch('https://formcarry.com/s/xjw9Y3VD56J', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          category: formData.category,
+        }),
       });
-      onClose();
-    }, 3000);
+
+      if (response.ok) {
+        setSubmitted(true);
+        
+        // Reset form after 3 seconds
+        setTimeout(() => {
+          setSubmitted(false);
+          setFormData({
+            name: '',
+            email: '',
+            subject: '',
+            message: '',
+            category: 'general'
+          });
+          onClose();
+        }, 3000);
+      } else {
+        throw new Error('Form submission failed');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      // Show error state or fallback
+      alert('There was an error submitting your message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

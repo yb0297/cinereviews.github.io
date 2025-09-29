@@ -19,6 +19,7 @@ export interface Movie {
   watchLink?: string;
   trailerLink?: string;
   buyLink?: string;
+  gameplayVideoLink?: string;
   recommendedRequirements?: {
     os: string;
     processor: string;

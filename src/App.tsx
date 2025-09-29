@@ -9,6 +9,7 @@ import { AuthModal } from './components/AuthModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { AdBanner } from './components/AdBanner';
 import { AdSidebar } from './components/AdSidebar';
+import { BottomAdBanner } from './components/BottomAdBanner';
 import { ContactForm } from './components/ContactForm';
 import { ProfileModal } from './components/ProfileModal';
 import { TrendingCarousel } from './components/TrendingCarousel';
@@ -374,6 +375,9 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Bottom AdSense Banner */}
+      <BottomAdBanner />
 
       {/* Movie Modal */}
       <MovieModal

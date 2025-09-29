@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Star, Play, Eye, Gamepad2, ShoppingCart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Star, Play, Eye, Gamepad2, ShoppingCart, Youtube } from 'lucide-react';
 import { Movie } from '../types/movie';
 
 interface MiniCarouselProps {
@@ -113,6 +113,18 @@ export const MiniCarousel: React.FC<MiniCarouselProps> = ({ movies, onMovieClick
                             >
                               <Gamepad2 className="w-4 h-4" />
                               <span>Play</span>
+                            </button>
+                          )}
+                          {movie.gameplayVideoLink && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(movie.gameplayVideoLink, '_blank');
+                              }}
+                              className="flex items-center space-x-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-medium text-sm transition-all duration-200 transform hover:scale-105"
+                            >
+                              <Youtube className="w-4 h-4" />
+                              <span>View Gameplay</span>
                             </button>
                           )}
                           {movie.buyLink && (
