@@ -123,13 +123,23 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
         </div>
 
         {/* Read Full Story Subcard */}
-        <div className="bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-all duration-200 cursor-pointer">
+        <button 
+          onClick={() => {
+            if (news.sourceUrl) {
+              window.open(news.sourceUrl, '_blank');
+            } else {
+              // Fallback URL if no specific URL is provided
+              window.open(`/news/${news.id}`, '_blank');
+            }
+          }}
+          className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-all duration-200 cursor-pointer"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full">
                 <ExternalLink className="w-4 h-4 text-white" />
               </div>
-              <div>
+              <div className="text-left">
                 <h4 className="text-white font-semibold text-sm">Read Full Story</h4>
                 <p className="text-gray-400 text-xs">Click to read the complete article</p>
               </div>
@@ -138,7 +148,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
               <ExternalLink className="w-5 h-5" />
             </div>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );

@@ -97,12 +97,15 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, user, onAu
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
-        {/* Category Badge */}
-        {(movie.isGame || movie.isSeries || movie.isAnime) && (
-          <div className="absolute top-4 left-4 bg-blue-600 rounded-lg px-3 py-1 text-white text-xs font-semibold uppercase tracking-wide shadow-lg z-30">
-            {movie.isGame ? '🎮 Game' : movie.isSeries ? '📺 Series' : movie.isAnime ? '🎌 Anime' : '🎬 Movie'}
+        {/* Black Bookmark Ribbon - Left Side */}
+        <div className="absolute top-0 left-6 w-16 h-20 bg-black shadow-lg">
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black"></div>
+          <div className="flex items-center justify-center h-full">
+            <span className="text-white text-xs font-bold transform -rotate-90">
+              {movie.isGame ? 'GAME' : movie.isSeries ? 'SERIES' : movie.isAnime ? 'ANIME' : 'MOVIE'}
+            </span>
           </div>
-        )}
+        </div>
         
         {/* Rating Badge */}
         <div className="absolute top-4 right-4 bg-yellow-500 rounded-lg px-3 py-1 flex items-center space-x-1 shadow-lg z-30">
