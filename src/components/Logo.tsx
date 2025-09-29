@@ -37,10 +37,10 @@ export const Logo: React.FC<LogoProps> = ({ size = 'medium', className = '' }) =
       <div className="flex flex-col">
         <div className={`${sizeClasses[size]} font-black tracking-tight`}>
           <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            CINE
+            YBY
           </span>
           <span className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent">
-            HUB
+            CineReviews
           </span>
         </div>
         {size !== 'small' && (

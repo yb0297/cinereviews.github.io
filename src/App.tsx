@@ -225,7 +225,6 @@ function App() {
       {currentSection === 'home' && !searchQuery && featuredMovie && (
         <HeroSection
           featuredMovie={featuredMovie}
-          onWatchTrailer={() => console.log('Watch trailer')}
           onViewDetails={() => handleMovieClick(featuredMovie)}
         />
       )}
@@ -293,6 +292,17 @@ function App() {
         </div>
       )}
 
+      {/* Mini Carousels for Category Pages */}
+      {(currentSection === 'movies' || currentSection === 'series' || currentSection === 'anime' || currentSection === 'games') && !searchQuery && !loading && movies.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <MiniCarousel
+            movies={movies.slice(0, 5)} // Show top 5 featured items
+            onMovieClick={handleMovieClick}
+            title={`Featured ${currentSection.charAt(0).toUpperCase() + currentSection.slice(1)}`}
+          />
+        </div>
+      )}
+
       {/* Top Banner Ad */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="bg-gray-50 rounded-lg p-4">
@@ -336,15 +346,6 @@ function App() {
               </div>
             ) : (
               <>
-                {/* Mini Carousel for specific category pages */}
-                {(currentSection === 'movies' || currentSection === 'series' || currentSection === 'anime' || currentSection === 'games') && !searchQuery && movies.length > 0 && (
-                  <MiniCarousel
-                    movies={movies.slice(0, 5)} // Show top 5 featured items
-                    onMovieClick={handleMovieClick}
-                    title={`Featured ${currentSection.charAt(0).toUpperCase() + currentSection.slice(1)}`}
-                  />
-                )}
-                
                 <MovieGrid 
                   movies={movies} 
                   onMovieClick={handleMovieClick} 
@@ -413,7 +414,7 @@ function App() {
                 <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">C</span>
                 </div>
-                <span className="text-xl font-bold">CineReviews</span>
+                <span className="text-xl font-bold">YBY CineReviews</span>
               </div>
               <p className="text-gray-400 mb-4 max-w-md">
                 Your ultimate destination for movie reviews, ratings, and
@@ -481,7 +482,7 @@ function App() {
           </div>
 
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 CineReviews. All rights reserved.</p>
+            <p>&copy; 2024 YBY CineReviews. All rights reserved.</p>
           </div>
         </div>
       </footer>

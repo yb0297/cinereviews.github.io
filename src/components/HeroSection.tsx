@@ -1,16 +1,14 @@
 import React from 'react';
-import { Play, Star, Calendar, Clock } from 'lucide-react';
+import { Play, Star, Calendar, Clock, Eye, Gamepad2, ShoppingCart } from 'lucide-react';
 import { Movie } from '../types/movie';
 
 interface HeroSectionProps {
   featuredMovie: Movie;
-  onWatchTrailer: () => void;
   onViewDetails: () => void;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ 
   featuredMovie, 
-  onWatchTrailer, 
   onViewDetails 
 }) => {
   const formatDate = (dateString: string) => {
@@ -70,19 +68,67 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={onWatchTrailer}
-                className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl"
-              >
-                <Play className="w-5 h-5 fill-current" />
-                <span>Watch Trailer</span>
-              </button>
+              {featuredMovie.isGame ? (
+                <>
+                  {featuredMovie.watchLink && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(featuredMovie.watchLink, '_blank');
+                      }}
+                      className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      <Gamepad2 className="w-5 h-5" />
+                      <span>Watch Gameplay</span>
+                    </button>
+                  )}
+                  {featuredMovie.buyLink && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(featuredMovie.buyLink, '_blank');
+                      }}
+                      className="flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      <span>Buy Game</span>
+                    </button>
+                  )}
+                </>
+              ) : (
+                <>
+                  {featuredMovie.watchLink && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(featuredMovie.watchLink, '_blank');
+                      }}
+                      className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      <Play className="w-5 h-5 fill-current" />
+                      <span>Watch Now</span>
+                    </button>
+                  )}
+                  {featuredMovie.trailerLink && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(featuredMovie.trailerLink, '_blank');
+                      }}
+                      className="flex items-center justify-center space-x-2 bg-gray-700 hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    >
+                      <Eye className="w-5 h-5" />
+                      <span>Watch Trailer</span>
+                    </button>
+                  )}
+                </>
+              )}
               
               <button
                 onClick={onViewDetails}
-                className="flex items-center justify-center space-x-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 border border-white/30"
+                className="flex items-center justify-center space-x-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 border border-white/30 transform hover:scale-105"
               >
-                <span>View Details</span>
+                <span>More Details</span>
               </button>
             </div>
           </div>
