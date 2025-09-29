@@ -53,10 +53,10 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   };
 
   return (
-    <div className={`bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-700 ${
+    <div className={`bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-700 w-full ${
       isExpanded 
-        ? 'w-full max-w-4xl transform scale-100' 
-        : 'w-full max-w-sm hover:scale-105'
+        ? 'transform scale-100' 
+        : 'hover:scale-[1.02]'
     }`}>
       {/* Image Header */}
       <div className={`relative overflow-hidden transition-all duration-500 ${
@@ -102,9 +102,9 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
       {/* Content */}
       <div className={`transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}>
-        <div className={`${isExpanded ? 'flex gap-6' : ''}`}>
+        <div className={`${isExpanded ? 'flex gap-8' : 'flex gap-6'}`}>
           {/* Left Column - Main Content */}
-          <div className={`${isExpanded ? 'flex-1' : ''}`}>
+          <div className={`${isExpanded ? 'flex-1' : 'flex-1'}`}>
             {/* Title */}
             <h3 className={`font-bold text-white mb-3 leading-tight transition-all duration-300 ${
               isExpanded ? 'text-2xl' : 'text-xl line-clamp-2'
@@ -166,44 +166,59 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
             </div>
           </div>
 
-          {/* Right Column - Expanded Actions */}
-          {isExpanded && (
-            <div className="w-64 flex-shrink-0 animate-in slide-in-from-right duration-500">
-              <div className="bg-gray-700/30 rounded-lg p-4 mb-4">
-                <h4 className="text-white font-semibold mb-3">Quick Actions</h4>
-                <div className="space-y-2">
-                  <button 
-                    onClick={() => setIsModalOpen(true)}
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
-                  >
-                    <ExternalLink className="w-3 h-3" />
-                    <span>Full Article</span>
-                  </button>
-                  {news.sourceUrl && (
+          {/* Right Column - Always present but conditional content */}
+          <div className={`flex-shrink-0 transition-all duration-500 ${
+            isExpanded ? 'w-80 opacity-100' : 'w-20 opacity-50'
+          }`}>
+            {isExpanded ? (
+              <div className="animate-in slide-in-from-right duration-500">
+                <div className="bg-gray-700/30 rounded-lg p-4 mb-4">
+                  <h4 className="text-white font-semibold mb-3">Quick Actions</h4>
+                  <div className="space-y-2">
                     <button 
-                      onClick={() => window.open(news.sourceUrl, '_blank')}
-                      className="w-full bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+                      onClick={() => setIsModalOpen(true)}
+                      className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
                     >
                       <ExternalLink className="w-3 h-3" />
-                      <span>Original Source</span>
+                      <span>Full Article</span>
                     </button>
-                  )}
+                    {news.sourceUrl && (
+                      <button 
+                        onClick={() => window.open(news.sourceUrl, '_blank')}
+                        className="w-full bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Original Source</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="bg-gray-700/30 rounded-lg p-4">
+                  <h4 className="text-white font-semibold mb-2">Category</h4>
+                  <div className={`${getCategoryColor(news.category)} px-3 py-2 rounded-full flex items-center space-x-2 justify-center`}>
+                    <span className="text-white text-sm">
+                      {getCategoryEmoji(news.category)}
+                    </span>
+                    <span className="text-white font-semibold text-sm uppercase">
+                      {news.category}
+                    </span>
+                  </div>
                 </div>
               </div>
-              
-              <div className="bg-gray-700/30 rounded-lg p-4">
-                <h4 className="text-white font-semibold mb-2">Category</h4>
-                <div className={`${getCategoryColor(news.category)} px-3 py-2 rounded-full flex items-center space-x-2 justify-center`}>
-                  <span className="text-white text-sm">
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full">
+                <div className={`${getCategoryColor(news.category)} p-3 rounded-full mb-2`}>
+                  <span className="text-white text-lg">
                     {getCategoryEmoji(news.category)}
                   </span>
-                  <span className="text-white font-semibold text-sm uppercase">
-                    {news.category}
-                  </span>
                 </div>
+                <span className="text-gray-400 text-xs font-medium uppercase tracking-wide">
+                  {news.category}
+                </span>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Expand/Collapse Toggle */}
