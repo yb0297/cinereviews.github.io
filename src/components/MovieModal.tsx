@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Calendar, User, MessageSquare, ExternalLink, ShoppingCart, Eye } from 'lucide-react';
+import { X, Star, Calendar, User, MessageSquare, ExternalLink, ShoppingCart, Eye, Play, Gamepad2 } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
 import { manualCommentService, ManualComment } from '../services/manualCommentService';
@@ -190,35 +190,56 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                     </div>
                   )}
                   
-                  {/* External Links */}
-                  {(movie.watchLink || movie.buyLink) && (
-                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6">
-                      <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                  {/* Action Buttons */}
+                  {(movie.watchLink || movie.trailerLink || movie.buyLink) && (
+                    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200 mb-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                         <ExternalLink className="w-5 h-5 mr-2 text-blue-600" />
-                        {movie.isGame ? 'Buy Game' : movie.isSeries || movie.isAnime ? 'Watch Now' : 'Watch Movie'}
+                        {movie.isGame ? 'Game Actions' : 'Watch Options'}
                       </h3>
                       <div className="flex flex-wrap gap-4">
-                        {movie.watchLink && (
-                          <a
-                            href={movie.watchLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
-                          >
-                            <Eye className="w-5 h-5" />
-                            <span>Watch Now</span>
-                          </a>
-                        )}
-                        {movie.buyLink && (
-                          <a
-                            href={movie.buyLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
-                          >
-                            <ShoppingCart className="w-5 h-5" />
-                            <span>Buy Game</span>
-                          </a>
+                        {movie.isGame ? (
+                          <>
+                            {movie.watchLink && (
+                              <button
+                                onClick={() => window.open(movie.watchLink, '_blank')}
+                                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
+                              >
+                                <Gamepad2 className="w-5 h-5" />
+                                <span>Watch Gameplay</span>
+                              </button>
+                            )}
+                            {movie.buyLink && (
+                              <button
+                                onClick={() => window.open(movie.buyLink, '_blank')}
+                                className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
+                              >
+                                <ShoppingCart className="w-5 h-5" />
+                                <span>Buy Game</span>
+                              </button>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {movie.watchLink && (
+                              <button
+                                onClick={() => window.open(movie.watchLink, '_blank')}
+                                className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
+                              >
+                                <Play className="w-5 h-5 fill-current" />
+                                <span>Watch Now</span>
+                              </button>
+                            )}
+                            {movie.trailerLink && (
+                              <button
+                                onClick={() => window.open(movie.trailerLink, '_blank')}
+                                className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
+                              >
+                                <Eye className="w-5 h-5" />
+                                <span>Watch Trailer</span>
+                              </button>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>

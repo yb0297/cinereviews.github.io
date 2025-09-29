@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, TrendingUp, Star, Play } from 'lucide-react';
+import { ChevronLeft, ChevronRight, TrendingUp, Star, Play, Eye, Gamepad2, ShoppingCart } from 'lucide-react';
 import { Movie } from '../types/movie';
 
 interface TrendingCarouselProps {
@@ -99,17 +99,64 @@ export const TrendingCarousel: React.FC<TrendingCarouselProps> = ({ movies, onMo
                     {movie.overview}
                   </p>
 
-                  {/* Action Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onMovieClick(movie);
-                    }}
-                    className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
-                  >
-                    <Play className="w-5 h-5 fill-current" />
-                    <span>Watch Now</span>
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {movie.isGame ? (
+                      <>
+                        {movie.watchLink && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(movie.watchLink, '_blank');
+                            }}
+                            className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                          >
+                            <Gamepad2 className="w-5 h-5" />
+                            <span>Watch Gameplay</span>
+                          </button>
+                        )}
+                        {movie.buyLink && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(movie.buyLink, '_blank');
+                            }}
+                            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                          >
+                            <ShoppingCart className="w-5 h-5" />
+                            <span>Buy Game</span>
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {movie.watchLink && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(movie.watchLink, '_blank');
+                            }}
+                            className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                          >
+                            <Play className="w-5 h-5 fill-current" />
+                            <span>Watch Now</span>
+                          </button>
+                        )}
+                        {movie.trailerLink && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              window.open(movie.trailerLink, '_blank');
+                            }}
+                            className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                          >
+                            <Eye className="w-5 h-5" />
+                            <span>Watch Trailer</span>
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

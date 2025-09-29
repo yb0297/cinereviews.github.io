@@ -14,7 +14,9 @@ const movies: Movie[] = [
     vote_count: 28000, 
     genre_ids: [28, 80, 18],
     pros: ["Exceptional performance by Heath Ledger", "Outstanding cinematography and direction", "Complex moral themes", "Incredible action sequences"],
-    cons: ["Quite dark and intense", "Long runtime may feel slow to some", "Complex plot requires attention"]
+    cons: ["Quite dark and intense", "Long runtime may feel slow to some", "Complex plot requires attention"],
+    trailerLink: "https://www.youtube.com/watch?v=EXeTwQWrcwY",
+    watchLink: "https://www.netflix.com/title/70079583"
   },
   { 
     id: 2, 
@@ -27,7 +29,9 @@ const movies: Movie[] = [
     vote_count: 32000, 
     genre_ids: [28, 878, 53],
     pros: ["Mind-bending and original concept", "Stunning visual effects", "Great ensemble cast", "Multiple layer storytelling"],
-    cons: ["Can be confusing on first watch", "Complex plot may alienate some viewers", "Pacing can feel slow at times"]
+    cons: ["Can be confusing on first watch", "Complex plot may alienate some viewers", "Pacing can feel slow at times"],
+    trailerLink: "https://www.youtube.com/watch?v=YoHD9XEInc0",
+    watchLink: "https://www.netflix.com/title/70131314"
   },
   { 
     id: 3, 

@@ -17,6 +17,7 @@ export interface Movie {
   isSeries?: boolean;
   isAnime?: boolean;
   watchLink?: string;
+  trailerLink?: string;
   buyLink?: string;
   recommendedRequirements?: {
     os: string;

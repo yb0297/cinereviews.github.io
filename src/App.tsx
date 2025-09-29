@@ -14,6 +14,7 @@ import { ProfileModal } from './components/ProfileModal';
 import { TrendingCarousel } from './components/TrendingCarousel';
 import { TopRatedSection } from './components/TopRatedSection';
 import { ComingSoonSection } from './components/ComingSoonSection';
+import { UserPersonalizedSection } from './components/UserPersonalizedSection';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
@@ -241,6 +242,12 @@ function App() {
       {/* Homepage Sections */}
       {currentSection === 'home' && !searchQuery && movies.length > 0 && (
         <div className="bg-gray-900">
+          {/* Top Rated Section */}
+          <TopRatedSection
+            movies={movies}
+            onMovieClick={handleMovieClick}
+          />
+
           {/* Trending Carousel on Homepage */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <TrendingCarousel
@@ -249,11 +256,13 @@ function App() {
             />
           </div>
 
-          {/* Top Rated Section */}
-          <TopRatedSection
-            movies={movies}
-            onMovieClick={handleMovieClick}
-          />
+          {/* User Personalized Section - Only for signed-in users */}
+          {user && (
+            <UserPersonalizedSection
+              user={user}
+              onMovieClick={handleMovieClick}
+            />
+          )}
 
           {/* Coming Soon Section */}
           <ComingSoonSection
