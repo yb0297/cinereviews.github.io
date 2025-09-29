@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { X, Star, Calendar, Settings, User, MessageSquare } from 'lucide-react';
+import { X, Star, Calendar, User, MessageSquare } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
-import { AdminCommentPanel } from './AdminCommentPanel';
 import { manualCommentService, ManualComment } from '../services/manualCommentService';
 import type { User } from '@supabase/supabase-js';
 
@@ -22,7 +21,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({
   onAuthRequired,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'leave' | 'view' | 'cast'>('overview');
-  const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [comments, setComments] = useState<ManualComment[]>([]);
 
   // Load comments when modal opens or tab changes
@@ -53,21 +51,12 @@ export const MovieModal: React.FC<MovieModalProps> = ({
           <div className="flex items-center space-x-3">
             <h2 className="text-2xl font-bold text-gray-900">{movie.title}</h2>
           </div>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setIsAdminPanelOpen(true)}
-              className="p-2 hover:bg-gray-100 rounded-full text-gray-600 hover:text-gray-800 transition-colors"
-              title="Manage Comments"
-            >
-              <Settings className="w-5 h-5" />
-            </button>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-full"
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
 
         {/* Tabs */}
@@ -219,18 +208,9 @@ export const MovieModal: React.FC<MovieModalProps> = ({
           {/* View Comments */}
           {activeTab === 'view' && (
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  All Comments ({comments.length})
-                </h3>
-                <button
-                  onClick={() => setIsAdminPanelOpen(true)}
-                  className="flex items-center space-x-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition-colors"
-                >
-                  <Settings className="w-4 h-4" />
-                  <span>Manage</span>
-                </button>
-              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                All Comments ({comments.length})
+              </h3>
               
               {comments.length > 0 ? (
                 <div className="space-y-4">
@@ -298,12 +278,6 @@ export const MovieModal: React.FC<MovieModalProps> = ({
             </div>
           )}
         </div>
-
-        {/* Admin Comment Panel */}
-        <AdminCommentPanel
-          isOpen={isAdminPanelOpen}
-          onClose={() => setIsAdminPanelOpen(false)}
-        />
       </div>
     </div>
   );

@@ -81,7 +81,7 @@ export const manualCommentService = {
         name: 'John Smith',
         email: 'john@example.com',
         message: 'Best Batman movie ever! Heath Ledger\'s performance as the Joker was absolutely phenomenal.',
-        createdAt: '2024-01-15T10:30:00.000Z'
+        createdAt: '2024-12-15T10:30:00.000Z'
       },
       {
         id: 'sample_2',
@@ -90,7 +90,7 @@ export const manualCommentService = {
         name: 'Sarah Wilson',
         email: 'sarah@example.com',
         message: 'The cinematography and action sequences were incredible. This movie set a new standard for superhero films.',
-        createdAt: '2024-01-14T15:45:00.000Z'
+        createdAt: '2024-12-14T15:45:00.000Z'
       },
       {
         id: 'sample_3',
@@ -99,7 +99,7 @@ export const manualCommentService = {
         name: 'Mike Johnson',
         email: 'mike@example.com',
         message: 'Mind-bending masterpiece! Christopher Nolan really outdid himself with this one.',
-        createdAt: '2024-01-13T20:15:00.000Z'
+        createdAt: '2024-12-13T20:15:00.000Z'
       },
       {
         id: 'sample_4',
@@ -108,7 +108,7 @@ export const manualCommentService = {
         name: 'Emma Davis',
         email: 'emma@example.com',
         message: 'Made me cry! The emotional depth combined with the scientific accuracy was beautiful.',
-        createdAt: '2024-01-12T14:20:00.000Z'
+        createdAt: '2024-12-12T14:20:00.000Z'
       }
     ];
 
