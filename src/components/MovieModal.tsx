@@ -3,13 +3,13 @@ import { X, Star, Calendar, User, MessageSquare } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
 import { manualCommentService, ManualComment } from '../services/manualCommentService';
-import type { User } from '@supabase/supabase-js';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface MovieModalProps {
   movie: Movie | null;
   isOpen: boolean;
   onClose: () => void;
-  user: User | null;
+  user: SupabaseUser | null;
   onAuthRequired: () => void;
 }
 
@@ -91,11 +91,16 @@ export const MovieModal: React.FC<MovieModalProps> = ({
             <div>
               <div className="flex gap-6 mb-6">
                 <img
-                  src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                  src={movie.poster_path?.startsWith('http') 
+                    ? movie.poster_path 
+                    : movie.poster_path 
+                      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
+                      : 'https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=400'
+                  }
                   alt={movie.title}
-                  className="w-48 rounded-lg"
+                  className="w-48 rounded-lg shadow-lg"
                 />
-                <div>
+                <div className="flex-1">
                   <div className="flex items-center gap-4 mb-4">
                     <div className="flex items-center gap-1">
                       <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
@@ -107,13 +112,100 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                       <Calendar className="w-4 h-4" />
                       <span>{new Date(movie.release_date).getFullYear()}</span>
                     </div>
+                    {movie.isGame && (
+                      <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+                        Game
+                      </span>
+                    )}
                   </div>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-gray-700 leading-relaxed mb-6">
                     {movie.overview}
                   </p>
+                  
+                  {/* Pros and Cons */}
+                  {(movie.pros || movie.cons) && (
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                      {movie.pros && (
+                        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                          <h4 className="font-semibold text-green-800 mb-3 flex items-center">
+                            <span className="text-green-500 mr-2">✓</span>
+                            Pros
+                          </h4>
+                          <ul className="space-y-2">
+                            {movie.pros.map((pro, index) => (
+                              <li key={index} className="text-green-700 text-sm flex items-start">
+                                <span className="text-green-500 mr-2 text-xs">•</span>
+                                {pro}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {movie.cons && (
+                        <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                          <h4 className="font-semibold text-red-800 mb-3 flex items-center">
+                            <span className="text-red-500 mr-2">✗</span>
+                            Cons
+                          </h4>
+                          <ul className="space-y-2">
+                            {movie.cons.map((con, index) => (
+                              <li key={index} className="text-red-700 text-sm flex items-start">
+                                <span className="text-red-500 mr-2 text-xs">•</span>
+                                {con}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {/* System Requirements for Games */}
+                  {movie.isGame && (movie.minimumRequirements || movie.recommendedRequirements) && (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+                      <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                        <span className="text-blue-600 mr-2">🖥️</span>
+                        System Requirements
+                      </h3>
+                      
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {movie.minimumRequirements && (
+                          <div className="bg-white p-4 rounded-lg shadow-sm">
+                            <h4 className="font-semibold text-gray-800 mb-3 text-center bg-gray-100 py-2 rounded">
+                              Minimum Requirements
+                            </h4>
+                            <div className="space-y-2 text-sm">
+                              <div><span className="font-medium text-gray-600">OS:</span> {movie.minimumRequirements.os}</div>
+                              <div><span className="font-medium text-gray-600">Processor:</span> {movie.minimumRequirements.processor}</div>
+                              <div><span className="font-medium text-gray-600">Memory:</span> {movie.minimumRequirements.memory}</div>
+                              <div><span className="font-medium text-gray-600">Graphics:</span> {movie.minimumRequirements.graphics}</div>
+                              <div><span className="font-medium text-gray-600">Storage:</span> {movie.minimumRequirements.storage}</div>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {movie.recommendedRequirements && (
+                          <div className="bg-white p-4 rounded-lg shadow-sm border-2 border-green-200">
+                            <h4 className="font-semibold text-gray-800 mb-3 text-center bg-green-100 py-2 rounded">
+                              Recommended Requirements
+                            </h4>
+                            <div className="space-y-2 text-sm">
+                              <div><span className="font-medium text-gray-600">OS:</span> {movie.recommendedRequirements.os}</div>
+                              <div><span className="font-medium text-gray-600">Processor:</span> {movie.recommendedRequirements.processor}</div>
+                              <div><span className="font-medium text-gray-600">Memory:</span> {movie.recommendedRequirements.memory}</div>
+                              <div><span className="font-medium text-gray-600">Graphics:</span> {movie.recommendedRequirements.graphics}</div>
+                              <div><span className="font-medium text-gray-600">Storage:</span> {movie.recommendedRequirements.storage}</div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-              <AdBanner />
+              
+              <AdBanner adSlot="movie-modal-banner" />
             </div>
           )}
 
@@ -201,7 +293,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                 </div>
               )}
 
-              <AdBanner />
+              <AdBanner adSlot="movie-comments-banner" />
             </div>
           )}
 

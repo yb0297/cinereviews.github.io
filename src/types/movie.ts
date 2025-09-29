@@ -10,6 +10,24 @@ export interface Movie {
   genre_ids: number[];
   runtime?: number;
   genres?: Genre[];
+  pros?: string[];
+  cons?: string[];
+  // Game-specific fields
+  isGame?: boolean;
+  recommendedRequirements?: {
+    os: string;
+    processor: string;
+    memory: string;
+    graphics: string;
+    storage: string;
+  };
+  minimumRequirements?: {
+    os: string;
+    processor: string;
+    memory: string;
+    graphics: string;
+    storage: string;
+  };
 }
 
 export interface Genre {

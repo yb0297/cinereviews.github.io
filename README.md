@@ -117,67 +117,187 @@ Configuration:
 └── tailwind.config.js  # Tailwind CSS configuration
 ```
 
-## 📝 How to Add Articles/Content to the Website
+## 📝 How to Manually Add Content to Your YBYCineReviews Website
 
-### Adding Movies, Series, Anime, and Games
+This comprehensive guide will teach you how to add movies, series, anime, and games to your CineReviews website through code modifications. Follow these step-by-step instructions to expand your content library.
 
-To add new content to your website, you need to modify the `src/services/movieService.ts` file. Here's how to add different types of content:
+### 🎬 Adding Movies, Series, Anime, and Games
 
-#### 1. Adding Movies
+To add new content to your website, you need to modify the `src/services/movieService.ts` file. All content types use the same data structure but with different properties for enhanced features.
+
+### 🎯 Step-by-Step Instructions
+
+#### 1. **Adding Movies**
+
+Movies are the foundation of your website. Here's how to add a new movie with full details including pros and cons:
+
 ```javascript
 // In src/services/movieService.ts, add to the mockMovies array:
 {
-  id: 9, // Use next available ID
-  title: "Your Movie Title",
+  id: 9, // Use next available ID (check existing movies first)
+  title: "Avatar: The Way of Water",
   poster_path: "https://images.pexels.com/photos/YOUR_IMAGE_ID/pexels-photo-YOUR_IMAGE_ID.jpeg?auto=compress&cs=tinysrgb&w=400",
   backdrop_path: "https://images.pexels.com/photos/YOUR_IMAGE_ID/pexels-photo-YOUR_IMAGE_ID.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  overview: "Your movie description here...",
-  release_date: "2024-01-01", // YYYY-MM-DD format
-  vote_average: 8.5, // Rating out of 10
-  vote_count: 25000, // Number of votes
-  genre_ids: [28, 12, 878] // Genre IDs (Action=28, Adventure=12, Sci-Fi=878)
+  overview: "Set more than a decade after the events of the first film, Avatar: The Way of Water tells the story of the Sully family and the trouble that follows them.",
+  release_date: "2022-12-16", // YYYY-MM-DD format
+  vote_average: 8.1, // Rating out of 10
+  vote_count: 28000, // Number of votes  
+  genre_ids: [12, 14, 878], // Adventure=12, Fantasy=14, Sci-Fi=878
+  pros: [
+    "Stunning underwater cinematography",
+    "Groundbreaking visual effects",
+    "Emotional family storyline",
+    "Immersive world-building"
+  ],
+  cons: [
+    "Very long runtime (3+ hours)",
+    "Slow pacing in middle sections",
+    "Requires knowledge of first film"
+  ]
 }
 ```
 
-#### 2. Adding TV Series
-```javascript
-// Series are filtered from movies in the handleNavigate function
-// Add a movie entry and it will automatically appear in the Series section
-// The system adds "(Series)" to the title automatically
-```
+#### 2. **Adding TV Series**
 
-#### 3. Adding Anime
-```javascript
-// Anime are filtered from movies in the handleNavigate function  
-// Add a movie entry and it will automatically appear in the Anime section
-// The system adds "(Anime)" to the title automatically
-```
+Series use the same structure as movies but are categorized differently in the app:
 
-#### 4. Adding Games
 ```javascript
-// Games are filtered from movies in the handleNavigate function
-// Add entries like the existing game examples:
 {
-  id: 9,
-  title: "Your Game Title",
-  poster_path: "https://images.pexels.com/photos/GAME_IMAGE_ID/pexels-photo-GAME_IMAGE_ID.jpeg?auto=compress&cs=tinysrgb&w=400",
-  backdrop_path: "https://images.pexels.com/photos/GAME_IMAGE_ID/pexels-photo-GAME_IMAGE_ID.jpeg?auto=compress&cs=tinysrgb&w=1200",
-  overview: "Your game description with gameplay details...",
-  release_date: "2024-01-01",
-  vote_average: 9.0,
-  vote_count: 30000,
-  genre_ids: [28, 12, 878]
+  id: 10,
+  title: "House of the Dragon",
+  poster_path: "https://images.pexels.com/photos/YOUR_SERIES_IMAGE/pexels-photo-YOUR_SERIES_IMAGE.jpeg?auto=compress&cs=tinysrgb&w=400",
+  backdrop_path: "https://images.pexels.com/photos/YOUR_SERIES_IMAGE/pexels-photo-YOUR_SERIES_IMAGE.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  overview: "The Targaryen civil war begins. Based on George R.R. Martin's 'Fire & Blood,' 200 years before the events of Game of Thrones.",
+  release_date: "2022-08-21",
+  vote_average: 8.4,
+  vote_count: 15000,
+  genre_ids: [18, 14, 28], // Drama=18, Fantasy=14, Action=28
+  pros: [
+    "Excellent production values",
+    "Strong character development", 
+    "Epic dragon sequences",
+    "Political intrigue and drama"
+  ],
+  cons: [
+    "Violent content may not suit all audiences",
+    "Complex political storylines",
+    "High expectations from Game of Thrones fans"
+  ]
 }
 ```
+
+#### 3. **Adding Anime**
+
+Anime content follows the same structure with unique characteristics:
+
+```javascript
+{
+  id: 11,
+  title: "Your Name",
+  poster_path: "https://images.pexels.com/photos/YOUR_ANIME_IMAGE/pexels-photo-YOUR_ANIME_IMAGE.jpeg?auto=compress&cs=tinysrgb&w=400",
+  backdrop_path: "https://images.pexels.com/photos/YOUR_ANIME_IMAGE/pexels-photo-YOUR_ANIME_IMAGE.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  overview: "A teenage boy and girl embark on a quest to find each other after discovering they are swapping bodies.",
+  release_date: "2016-08-26",
+  vote_average: 8.2,
+  vote_count: 18000,
+  genre_ids: [16, 18, 14], // Animation=16, Drama=18, Fantasy=14
+  pros: [
+    "Beautiful hand-drawn animation",
+    "Emotional and touching storyline",
+    "Excellent soundtrack by RADWIMPS",
+    "Universal themes of connection"
+  ],
+  cons: [
+    "May be too emotional for some viewers",
+    "Requires subtitles for non-Japanese speakers",
+    "Complex time-travel elements"
+  ]
+}
+```
+
+#### 4. **Adding Games** 🎮
+
+Games are special content that includes system requirements for PC gaming. Set `isGame: true` and include both minimum and recommended specifications:
+
+```javascript
+{
+  id: 12,
+  title: "Baldur's Gate 3",
+  poster_path: "https://images.pexels.com/photos/YOUR_GAME_IMAGE/pexels-photo-YOUR_GAME_IMAGE.jpeg?auto=compress&cs=tinysrgb&w=400",
+  backdrop_path: "https://images.pexels.com/photos/YOUR_GAME_IMAGE/pexels-photo-YOUR_GAME_IMAGE.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  overview: "An epic RPG adventure based on Dungeons & Dragons, featuring turn-based combat, deep character customization, and branching storylines.",
+  release_date: "2023-08-03",
+  vote_average: 9.2,
+  vote_count: 42000,
+  genre_ids: [12, 14, 18], // Adventure=12, Fantasy=14, Drama=18
+  isGame: true, // IMPORTANT: Mark as game
+  pros: [
+    "Deep character customization and choices",
+    "Excellent voice acting and dialogue",
+    "Strategic turn-based combat system",
+    "Co-op multiplayer support"
+  ],
+  cons: [
+    "Steep learning curve for D&D newcomers",
+    "Long loading times on slower systems",
+    "Some technical bugs at launch"
+  ],
+  // System Requirements
+  minimumRequirements: {
+    os: "Windows 10 64-bit",
+    processor: "Intel Core i5-4690 / AMD FX 4350",
+    memory: "8 GB RAM",
+    graphics: "NVIDIA GTX 970 / AMD RX 480",
+    storage: "150 GB available space"
+  },
+  recommendedRequirements: {
+    os: "Windows 10/11 64-bit",
+    processor: "Intel Core i7-8700K / AMD Ryzen 5 3600",
+    memory: "16 GB RAM", 
+    graphics: "NVIDIA RTX 2060 Super / AMD RX 6700 XT",
+    storage: "150 GB SSD space"
+  }
+}
+```
+
+## 🛠️ Technical Implementation Details
 
 ### Content Categories and Filtering
 
 The website automatically categorizes content based on the navigation:
 
 - **Movies**: Shows all content in the main movies section
-- **Series**: Filters movies and adds "(Series)" suffix
-- **Anime**: Filters movies and adds "(Anime)" suffix  
-- **Games**: Filters movies and adds "(Game)" suffix
+- **Series**: Shows content categorized as series
+- **Anime**: Shows content categorized as anime
+- **Games**: Shows content marked with `isGame: true` - includes system requirements
+
+### Required Fields for All Content
+
+**Essential Fields:**
+```javascript
+{
+  id: number,           // Unique identifier (increment from existing)
+  title: string,        // Content title
+  poster_path: string,  // Poster image URL
+  backdrop_path: string,// Background image URL  
+  overview: string,     // Description/synopsis
+  release_date: string, // YYYY-MM-DD format
+  vote_average: number, // Rating 0-10
+  vote_count: number,   // Number of reviews
+  genre_ids: number[]   // Genre ID array
+}
+```
+
+**Enhanced Fields (Optional):**
+```javascript
+{
+  pros: string[],       // Positive aspects
+  cons: string[],       // Negative aspects
+  isGame: boolean,      // Mark as game for special features
+  minimumRequirements: {}, // Game system requirements
+  recommendedRequirements: {} // Game recommended specs
+}
+```
 
 ### Adding Comments for New Content
 

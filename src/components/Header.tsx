@@ -13,6 +13,7 @@ import {
   User,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { Logo } from "./Logo";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -64,10 +65,10 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="bg-gray-900 text-white px-4 py-2 flex flex-col md:flex-row md:items-center md:justify-between">
       {/* Logo */}
       <div
-        className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+        className="cursor-pointer hover:opacity-80 transition-all duration-300 hover:scale-105"
         onClick={() => onNavigate("home")}
       >
-        CineReviews
+        <Logo size="medium" />
       </div>
 
       {/* Desktop Navigation */}
