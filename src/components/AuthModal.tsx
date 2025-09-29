@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, LogOut } from 'lucide-react';
 import { supabase, signInWithGoogle, signOut } from '../lib/supabase';
+import { profileService } from '../services/profileService';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface AuthModalProps {
@@ -16,7 +17,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, user, onA
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: any, session: any) => {
+      async (event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
           onAuthChange(session.user);
           onClose();
@@ -52,7 +53,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, user, onA
       const { error } = await signOut();
       if (error) {
         setError(error.message);
-        // Profile creation is handled in the auth state change listener
+        // Create or update profile when user signs in
+        try {
+          await profileService.createOrUpdateProfile(session.user);
+        } catch (error) {
+          console.error('Error creating/updating profile:', error);
+        }
       } else {
         onClose();
       }

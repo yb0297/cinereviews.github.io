@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { X, User, CreditCard as Edit3, Save, Calendar, Star, Film } from 'lucide-react';
 import { profileService } from '../services/profileService';
+import { commentService } from '../services/commentService';
 import { Profile, ProfileFormData } from '../types/profile';
+import { Comment } from '../types/comment';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface ProfileModalProps {
@@ -12,7 +14,7 @@ interface ProfileModalProps {
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, user }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [userComments, setUserComments] = useState<any[]>([]);
+  const [userReviews, setUserReviews] = useState<Review[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -25,7 +27,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
   useEffect(() => {
     if (isOpen && user) {
       loadProfile();
-      loadUserComments();
+      loadUserReviews();
     }
   }, [isOpen, user]);
 
@@ -56,11 +58,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
     }
   };
 
-  const loadUserComments = async () => {
+  const loadUserReviews = async () => {
     if (!user) return;
     
     try {
-      const comments = []; // TODO: Load user comments if needed
+      const reviews = await reviewService.getUserReviews();
       setUserReviews(reviews);
     } catch (error) {
       console.error('Error loading user reviews:', error);

@@ -11,7 +11,6 @@ import { AdBanner } from './components/AdBanner';
 import { AdSidebar } from './components/AdSidebar';
 import { ContactForm } from './components/ContactForm';
 import { ProfileModal } from './components/ProfileModal';
-import { TrendingCarousel } from './components/TrendingCarousel';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
@@ -23,7 +22,7 @@ function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
   const [carouselMovies, setCarouselMovies] = useState<Movie[]>([]);
-  const [, setCarouselIndex] = useState(0);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -224,16 +223,6 @@ function App() {
           onWatchTrailer={() => console.log('Watch trailer')}
           onViewDetails={() => handleMovieClick(featuredMovie)}
         />
-      )}
-
-      {/* Trending Carousel */}
-      {currentSection === 'trending' && !searchQuery && movies.length > 0 && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <TrendingCarousel
-            movies={movies.slice(0, 8)} // Show top 8 trending items
-            onMovieClick={handleMovieClick}
-          />
-        </div>
       )}
 
       {/* Top Banner Ad */}
