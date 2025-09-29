@@ -94,61 +94,15 @@ function App() {
 
     try {
       setLoading(true);
-      let newMovies: Movie[] = [];
-
-      switch (section) {
-        case 'home':
-          newMovies = await movieService.getPopularMovies();
-          break;
-        case 'movies':
-          newMovies = await movieService.getPopularMovies();
-          // Filter for movies only (you can add movie-specific logic here)
-          break;
-        case 'series':
-          newMovies = await movieService.getPopularMovies();
-          // Filter for series (mock data for now)
-          newMovies = newMovies.slice(0, 6).map(movie => ({
-            ...movie,
-            title: movie.title + ' (Series)',
-            overview: movie.overview + ' This is a TV series adaptation.'
-          }));
-          break;
-        case 'anime':
-          newMovies = await movieService.getPopularMovies();
-          // Filter for anime (mock data for now)
-          newMovies = newMovies.slice(0, 4).map(movie => ({
-            ...movie,
-            title: movie.title + ' (Anime)',
-            overview: movie.overview + ' This is an anime adaptation.'
-          }));
-          break;
-        case 'games':
-          newMovies = await movieService.getPopularMovies();
-          // Filter for games (mock data for now)
-          newMovies = newMovies.slice(0, 8).map(movie => ({
-            ...movie,
-            title: movie.title.replace(/^The /, '') + ' (Game)',
-            overview: movie.overview + ' This is a video game adaptation with immersive gameplay and stunning graphics.'
-          }));
-          break;
-        case 'trending':
-          newMovies = await movieService.getTrendingMovies();
-          break;
-        case 'top-rated':
-          newMovies = await movieService.getPopularMovies();
-          newMovies = newMovies.sort((a, b) => b.vote_average - a.vote_average);
-          break;
-        case 'coming-soon':
-          newMovies = await movieService.getPopularMovies();
-          newMovies = newMovies.filter(
-            (movie) => new Date(movie.release_date) > new Date()
-          );
-          break;
-        default:
-          newMovies = await movieService.getPopularMovies();
-      }
-
+      const newMovies = await movieService.getContentByCategory(section);
       setMovies(newMovies);
+      
+      // Update featured movie based on section
+      if (section === 'home' && newMovies.length > 0) {
+        setFeaturedMovie(newMovies[0]);
+      } else if (newMovies.length > 0) {
+        setFeaturedMovie(newMovies[0]);
+      }
     } catch (error) {
       console.error('Error loading section:', error);
     } finally {

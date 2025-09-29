@@ -12,8 +12,12 @@ export interface Movie {
   genres?: Genre[];
   pros?: string[];
   cons?: string[];
-  // Game-specific fields
+  // Category-specific fields
   isGame?: boolean;
+  isSeries?: boolean;
+  isAnime?: boolean;
+  watchLink?: string;
+  buyLink?: string;
   recommendedRequirements?: {
     os: string;
     processor: string;

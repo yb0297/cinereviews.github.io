@@ -1,8 +1,8 @@
 // services/movieService.ts
 import { Movie, Genre } from "../types/movie";
 
-// Mock movies
-const mockMovies: Movie[] = [
+// Movies data
+const movies: Movie[] = [
   { 
     id: 1, 
     title: "The Dark Knight", 
@@ -67,20 +67,123 @@ const mockMovies: Movie[] = [
     genre_ids: [12, 18, 878],
     pros: ["Stunning desert cinematography", "Epic world-building", "Excellent cast performances", "Faithful to source material"],
     cons: ["Only covers half of the first book", "Slow pacing in parts", "Complex mythology for newcomers"]
+  }
+];
+
+// Series data
+const series: Movie[] = [
+  {
+    id: 101,
+    title: "Breaking Bad",
+    poster_path: "https://images.pexels.com/photos/7991324/pexels-photo-7991324.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991324/pexels-photo-7991324.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine to secure his family's future.",
+    release_date: "2008-01-20",
+    vote_average: 9.5,
+    vote_count: 125000,
+    genre_ids: [18, 80, 53],
+    isSeries: true,
+    pros: ["Outstanding character development", "Brilliant writing and acting", "Perfect pacing and tension", "Memorable dialogues"],
+    cons: ["Can be very intense", "Slow start for some viewers", "Dark themes throughout"],
+    watchLink: "https://www.netflix.com/title/70143836"
   },
-  { 
-    id: 6, 
-    title: "Cyberpunk 2077", 
-    poster_path: "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=400", 
-    backdrop_path: "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1200", 
-    overview: "An open-world, action-adventure RPG set in the futuristic Night City, where you play as a cyberpunk mercenary involved in a fight for survival.", 
-    release_date: "2020-12-10", 
-    vote_average: 8.2, 
-    vote_count: 45000, 
+  {
+    id: 102,
+    title: "Game of Thrones",
+    poster_path: "https://images.pexels.com/photos/7991987/pexels-photo-7991987.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991987/pexels-photo-7991987.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.",
+    release_date: "2011-04-17",
+    vote_average: 9.2,
+    vote_count: 98000,
+    genre_ids: [18, 14, 28],
+    isSeries: true,
+    pros: ["Epic fantasy world-building", "Complex political intrigue", "Outstanding production values", "Memorable characters"],
+    cons: ["Controversial final seasons", "Very violent content", "Complex plot to follow"],
+    watchLink: "https://www.hbo.com/game-of-thrones"
+  },
+  {
+    id: 103,
+    title: "Stranger Things",
+    poster_path: "https://images.pexels.com/photos/7991445/pexels-photo-7991445.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991445/pexels-photo-7991445.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "When a young boy disappears, his mother, a police chief and his friends must confront terrifying supernatural forces in order to get him back.",
+    release_date: "2016-07-15",
+    vote_average: 8.7,
+    vote_count: 76000,
+    genre_ids: [18, 14, 27],
+    isSeries: true,
+    pros: ["Perfect 80s nostalgia", "Great young cast", "Supernatural mystery elements", "Excellent soundtrack"],
+    cons: ["Can be scary for younger viewers", "Some seasons weaker than others", "Repetitive plot elements"],
+    watchLink: "https://www.netflix.com/title/80057281"
+  }
+];
+
+// Anime data
+const anime: Movie[] = [
+  {
+    id: 201,
+    title: "Your Name",
+    poster_path: "https://images.pexels.com/photos/7991663/pexels-photo-7991663.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991663/pexels-photo-7991663.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "Two teenagers share a profound, magical connection upon discovering they are swapping bodies. Things manage to become even more complicated when the boy and girl decide to meet in person.",
+    release_date: "2016-08-26",
+    vote_average: 8.2,
+    vote_count: 45000,
+    genre_ids: [16, 35, 18],
+    isAnime: true,
+    pros: ["Stunning animation quality", "Emotional storytelling", "Beautiful soundtrack", "Unique time-travel concept"],
+    cons: ["Can be confusing at first", "Requires attention to detail", "Emotional intensity"],
+    watchLink: "https://www.crunchyroll.com/your-name"
+  },
+  {
+    id: 202,
+    title: "Attack on Titan",
+    poster_path: "https://images.pexels.com/photos/7991887/pexels-photo-7991887.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991887/pexels-photo-7991887.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "Humans fight for survival against giant humanoid Titans that have brought civilization to the brink of extinction.",
+    release_date: "2013-04-07",
+    vote_average: 9.0,
+    vote_count: 67000,
+    genre_ids: [16, 28, 18],
+    isAnime: true,
+    pros: ["Intense action sequences", "Complex mystery elements", "Character development", "Political intrigue"],
+    cons: ["Very violent content", "Can be emotionally heavy", "Complex plot"],
+    watchLink: "https://www.crunchyroll.com/attack-on-titan"
+  },
+  {
+    id: 203,
+    title: "Demon Slayer",
+    poster_path: "https://images.pexels.com/photos/7991556/pexels-photo-7991556.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991556/pexels-photo-7991556.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "A family is attacked by demons and only two members survive - Tanjiro and his sister Nezuko, who is turning into a demon slowly.",
+    release_date: "2019-04-06",
+    vote_average: 8.7,
+    vote_count: 89000,
+    genre_ids: [16, 28, 14],
+    isAnime: true,
+    pros: ["Incredible animation quality", "Emotional family story", "Amazing fight choreography", "Beautiful art style"],
+    cons: ["Violent demon battles", "Can be sad at times", "Fast-paced action"],
+    watchLink: "https://www.crunchyroll.com/demon-slayer-kimetsu-no-yaiba"
+  }
+];
+
+// Games data
+const games: Movie[] = [
+  {
+    id: 301,
+    title: "Cyberpunk 2077",
+    poster_path: "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "An open-world, action-adventure RPG set in the futuristic Night City, where you play as a cyberpunk mercenary involved in a fight for survival.",
+    release_date: "2020-12-10",
+    vote_average: 8.2,
+    vote_count: 45000,
     genre_ids: [28, 878, 12],
     isGame: true,
     pros: ["Incredible Night City atmosphere", "Engaging main storyline", "Deep character customization", "Impressive graphics on high-end systems"],
     cons: ["Launch was buggy", "AI behavior can be inconsistent", "Some promised features missing", "Performance issues on older consoles"],
+    buyLink: "https://store.steampowered.com/app/1091500/Cyberpunk_2077/",
     recommendedRequirements: {
       os: "Windows 10 64-bit",
       processor: "Intel Core i7-4790 or AMD Ryzen 3 3200G",
@@ -91,24 +194,25 @@ const mockMovies: Movie[] = [
     minimumRequirements: {
       os: "Windows 10 64-bit",
       processor: "Intel Core i5-3570K or AMD FX-8310",
-      memory: "8 GB RAM", 
+      memory: "8 GB RAM",
       graphics: "NVIDIA GeForce GTX 780 or AMD Radeon RX 470",
       storage: "70 GB available space"
     }
   },
-  { 
-    id: 7, 
-    title: "The Witcher 3", 
-    poster_path: "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?auto=compress&cs=tinysrgb&w=400", 
-    backdrop_path: "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?auto=compress&cs=tinysrgb&w=1200", 
-    overview: "A story-driven open world RPG set in a visually stunning fantasy universe full of meaningful choices and impactful consequences.", 
-    release_date: "2015-05-19", 
-    vote_average: 9.3, 
-    vote_count: 52000, 
+  {
+    id: 302,
+    title: "The Witcher 3",
+    poster_path: "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "A story-driven open world RPG set in a visually stunning fantasy universe full of meaningful choices and impactful consequences.",
+    release_date: "2015-05-19",
+    vote_average: 9.3,
+    vote_count: 52000,
     genre_ids: [12, 14, 18],
     isGame: true,
     pros: ["Exceptional storytelling", "Massive open world", "Meaningful side quests", "Beautiful graphics and music"],
     cons: ["Combat system can feel clunky", "Overwhelming amount of content", "Steep learning curve for newcomers"],
+    buyLink: "https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/",
     recommendedRequirements: {
       os: "Windows 10 64-bit",
       processor: "Intel CPU Core i7 3770 3.4 GHz or AMD CPU AMD FX-8350 4 GHz",
@@ -117,29 +221,30 @@ const mockMovies: Movie[] = [
       storage: "50 GB available space"
     },
     minimumRequirements: {
-      os: "Windows 7 64-bit", 
+      os: "Windows 7 64-bit",
       processor: "Intel CPU Core i5-2500K 3.3GHz or AMD A10-5800K APU",
       memory: "6 GB RAM",
       graphics: "NVIDIA GeForce GTX 660 or AMD Radeon HD 7870",
       storage: "50 GB available space"
     }
   },
-  { 
-    id: 8, 
-    title: "Red Dead Redemption 2", 
-    poster_path: "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=400", 
-    backdrop_path: "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=1200", 
-    overview: "An epic tale of life in America's unforgiving heartland, featuring a vast and atmospheric world that will also provide the foundation for a brand new online multiplayer experience.", 
-    release_date: "2018-10-26", 
-    vote_average: 9.7, 
-    vote_count: 38000, 
+  {
+    id: 303,
+    title: "Red Dead Redemption 2",
+    poster_path: "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "An epic tale of life in America's unforgiving heartland, featuring a vast and atmospheric world that will also provide the foundation for a brand new online multiplayer experience.",
+    release_date: "2018-10-26",
+    vote_average: 9.7,
+    vote_count: 38000,
     genre_ids: [28, 12, 18],
     isGame: true,
     pros: ["Incredible attention to detail", "Immersive western atmosphere", "Strong narrative and characters", "Stunning visuals"],
     cons: ["Slow pacing may not suit everyone", "Controls can feel heavy", "Long missions with checkpoints"],
+    buyLink: "https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/",
     recommendedRequirements: {
       os: "Windows 10 64-bit",
-      processor: "Intel Core i7-4770K or AMD Ryzen 5 1500X", 
+      processor: "Intel Core i7-4770K or AMD Ryzen 5 1500X",
       memory: "12 GB RAM",
       graphics: "NVIDIA GeForce GTX 1060 6GB or AMD Radeon RX 480 4GB",
       storage: "150 GB available space"
@@ -151,7 +256,11 @@ const mockMovies: Movie[] = [
       graphics: "NVIDIA GeForce GTX 770 2GB or AMD Radeon R9 280",
       storage: "150 GB available space"
     }
-  },
+  }
+];
+
+// All content combined
+const mockMovies = [...movies, ...series, ...anime, ...games,
 ];
 
 // Mock genres
@@ -190,7 +299,27 @@ const mockComments: Record<number, { user: string; message: string; date: string
 export const movieService = {
   async getPopularMovies(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...mockMovies].sort((a, b) => b.vote_average - a.vote_average);
+    return [...movies].sort((a, b) => b.vote_average - a.vote_average);
+  },
+
+  async getMovies(): Promise<Movie[]> {
+    await new Promise(res => setTimeout(res, 300));
+    return [...movies];
+  },
+
+  async getSeries(): Promise<Movie[]> {
+    await new Promise(res => setTimeout(res, 300));
+    return [...series];
+  },
+
+  async getAnime(): Promise<Movie[]> {
+    await new Promise(res => setTimeout(res, 300));
+    return [...anime];
+  },
+
+  async getGames(): Promise<Movie[]> {
+    await new Promise(res => setTimeout(res, 300));
+    return [...games];
   },
 
   async getTrendingMovies(): Promise<Movie[]> {
@@ -202,6 +331,17 @@ export const movieService = {
     });
   },
 
+  async getTopRated(): Promise<Movie[]> {
+    await new Promise(res => setTimeout(res, 300));
+    return [...mockMovies].sort((a, b) => b.vote_average - a.vote_average).slice(0, 20);
+  },
+
+  async getComingSoon(): Promise<Movie[]> {
+    await new Promise(res => setTimeout(res, 300));
+    const now = new Date();
+    return [...mockMovies].filter(movie => new Date(movie.release_date) > now);
+  },
+
   async searchMovies(query: string): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
     if (!query.trim()) return mockMovies;
@@ -211,6 +351,27 @@ export const movieService = {
         movie.title.toLowerCase().includes(searchTerm) ||
         movie.overview.toLowerCase().includes(searchTerm)
     );
+  },
+
+  async getContentByCategory(category: string): Promise<Movie[]> {
+    switch (category) {
+      case 'movies':
+        return this.getMovies();
+      case 'series':
+        return this.getSeries();
+      case 'anime':
+        return this.getAnime();
+      case 'games':
+        return this.getGames();
+      case 'trending':
+        return this.getTrendingMovies();
+      case 'top-rated':
+        return this.getTopRated();
+      case 'coming-soon':
+        return this.getComingSoon();
+      default:
+        return [...mockMovies];
+    }
   },
 
   async getGenres(): Promise<Genre[]> {

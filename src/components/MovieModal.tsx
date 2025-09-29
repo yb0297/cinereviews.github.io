@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Calendar, User, MessageSquare } from 'lucide-react';
+import { X, Star, Calendar, User, MessageSquare, ExternalLink, ShoppingCart, Eye } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
 import { manualCommentService, ManualComment } from '../services/manualCommentService';
@@ -44,8 +44,8 @@ export const MovieModal: React.FC<MovieModalProps> = ({
   if (!isOpen || !movie) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[95vh] overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b p-4 flex justify-between items-center">
           <div className="flex items-center space-x-3">
@@ -158,6 +158,40 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                           </ul>
                         </div>
                       )}
+                    </div>
+                  )}
+                  
+                  {/* External Links */}
+                  {(movie.watchLink || movie.buyLink) && (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200 mb-6">
+                      <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
+                        <ExternalLink className="w-5 h-5 mr-2 text-blue-600" />
+                        {movie.isGame ? 'Buy Game' : movie.isSeries || movie.isAnime ? 'Watch Now' : 'Watch Movie'}
+                      </h3>
+                      <div className="flex flex-wrap gap-4">
+                        {movie.watchLink && (
+                          <a
+                            href={movie.watchLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                          >
+                            <Eye className="w-5 h-5" />
+                            <span>Watch Now</span>
+                          </a>
+                        )}
+                        {movie.buyLink && (
+                          <a
+                            href={movie.buyLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                          >
+                            <ShoppingCart className="w-5 h-5" />
+                            <span>Buy Game</span>
+                          </a>
+                        )}
+                      </div>
                     </div>
                   )}
                   
