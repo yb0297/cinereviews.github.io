@@ -21,6 +21,8 @@ function App() {
   const [currentSection, setCurrentSection] = useState('home');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
+  const [carouselMovies, setCarouselMovies] = useState<Movie[]>([]);
+  const [carouselIndex, setCarouselIndex] = useState(0);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -41,6 +43,7 @@ function App() {
     );
 
     loadMovies();
+    loadCarouselMovies();
     
     // Listen for contact form events
     const handleOpenContactForm = () => setIsContactFormOpen(true);
@@ -52,17 +55,71 @@ function App() {
     };
   }, []);
 
+  // Automatic carousel effect
+  useEffect(() => {
+    if (carouselMovies.length === 0 || currentSection !== 'home' || searchQuery) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCarouselIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % carouselMovies.length;
+        setFeaturedMovie(carouselMovies[nextIndex]);
+        return nextIndex;
+      });
+    }, 4000); // Change every 4 seconds
+
+    return () => clearInterval(interval);
+  }, [carouselMovies, currentSection, searchQuery]);
+
   const loadMovies = async () => {
     try {
       setLoading(true);
       const popularMovies = await movieService.getPopularMovies();
       setMovies(popularMovies);
-      setFeaturedMovie(popularMovies[0] || null);
+      // Only set featuredMovie if carousel is not active
+      if (carouselMovies.length === 0 && !featuredMovie) {
+        setFeaturedMovie(popularMovies[0] || null);
+      }
       setCurrentSection('home');
     } catch (error) {
       console.error('Error loading movies:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCarouselMovies = async () => {
+    try {
+      // Fetch movies from different categories for carousel
+      const categories = ['movies', 'series', 'anime', 'games'];
+      const allCarouselMovies: Movie[] = [];
+      
+      // Load categories in parallel and handle failures gracefully
+      const categoryPromises = categories.map(async (category) => {
+        try {
+          const categoryMovies = await movieService.getContentByCategory(category);
+          return categoryMovies.slice(0, 2); // Get first 2 movies from each category
+        } catch (error) {
+          console.error(`Error loading ${category}:`, error);
+          return []; // Return empty array if category fails
+        }
+      });
+      
+      const categoryResults = await Promise.all(categoryPromises);
+      categoryResults.forEach(movies => allCarouselMovies.push(...movies));
+      
+      // Remove duplicates based on movie ID
+      const uniqueMovies = allCarouselMovies.filter((movie, index, self) => 
+        index === self.findIndex((m) => m.id === movie.id)
+      );
+      
+      setCarouselMovies(uniqueMovies);
+      if (uniqueMovies.length > 0 && !featuredMovie) {
+        setFeaturedMovie(uniqueMovies[0]);
+      }
+    } catch (error) {
+      console.error('Error loading carousel movies:', error);
     }
   };
 
@@ -97,9 +154,12 @@ function App() {
       const newMovies = await movieService.getContentByCategory(section);
       setMovies(newMovies);
       
-      // Update featured movie based on section
-      if (section === 'home' && newMovies.length > 0) {
-        setFeaturedMovie(newMovies[0]);
+      // Update featured movie based on section, but respect carousel for home
+      if (section === 'home') {
+        // Don't override carousel for home section
+        if (carouselMovies.length === 0 && newMovies.length > 0) {
+          setFeaturedMovie(newMovies[0]);
+        }
       } else if (newMovies.length > 0) {
         setFeaturedMovie(newMovies[0]);
       }

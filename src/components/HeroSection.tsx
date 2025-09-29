@@ -25,7 +25,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     <div className="relative h-[70vh] min-h-[500px] overflow-hidden">
       {/* Background Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
         style={{
           backgroundImage: `url(${featuredMovie.backdrop_path || featuredMovie.poster_path})`,
         }}
@@ -38,7 +38,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* Content */}
       <div className="relative h-full flex items-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl transition-all duration-1000 ease-in-out">
             {/* Movie Title */}
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
               {featuredMovie.title}

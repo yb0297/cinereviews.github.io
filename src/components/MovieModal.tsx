@@ -44,122 +44,109 @@ export const MovieModal: React.FC<MovieModalProps> = ({
   if (!isOpen || !movie) return null;
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-indigo-900/50 via-purple-900/60 to-pink-900/50 backdrop-blur-2xl flex items-center justify-center p-4 z-50">
-      <div className="bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-3xl rounded-3xl max-w-7xl w-full max-h-[95vh] overflow-y-auto shadow-[0_40px_80px_-12px_rgba(0,0,0,0.4)] border border-white/20"
-           style={{
-             backdropFilter: 'blur(40px) saturate(200%)',
-             background: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.1) 100%)',
-             boxShadow: '0 40px 80px rgba(0,0,0,0.2), inset 0 2px 0 rgba(255,255,255,0.1), inset 0 -2px 0 rgba(0,0,0,0.05)'
-           }}>
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-xl max-w-7xl w-full max-h-[95vh] overflow-y-auto shadow-2xl border border-gray-200">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-indigo-900/80 via-purple-900/80 to-pink-900/80 backdrop-blur-2xl border-b border-white/20 p-6 flex justify-between items-center rounded-t-3xl"
-             style={{
-               backdropFilter: 'blur(30px) saturate(180%)',
-               background: 'linear-gradient(90deg, rgba(79,70,229,0.8) 0%, rgba(139,69,193,0.8) 50%, rgba(219,39,119,0.8) 100%)'
-             }}>
-          <div className="flex items-center space-x-4">
-            <div className="w-3 h-10 bg-gradient-to-b from-cyan-400 via-blue-500 to-violet-600 rounded-full shadow-lg animate-pulse"></div>
-            <h2 className="text-4xl font-black bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent drop-shadow-2xl">{movie.title}</h2>
-          </div>
+        <div className="sticky top-0 bg-gray-50 border-b border-gray-200 p-6 flex justify-between items-center rounded-t-xl">
+          <h2 className="text-3xl font-bold text-gray-900">{movie.title}</h2>
           <button
             onClick={onClose}
-            className="p-3 hover:bg-white/20 rounded-full transition-all duration-500 group border-2 border-white/30 backdrop-blur-xl hover:border-red-400/50 hover:shadow-lg hover:shadow-red-500/20"
+            className="p-2 hover:bg-gray-200 rounded-lg transition-colors duration-200 text-gray-500 hover:text-gray-700"
           >
-            <X className="w-6 h-6 text-white group-hover:text-red-300 transition-colors duration-500 drop-shadow-lg" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
         {/* Tabs */}
-        <div className="bg-gradient-to-r from-white/5 via-white/10 to-white/5 backdrop-blur-xl border-b border-white/20">
-          <div className="flex space-x-3 px-8 py-4">
+        <div className="bg-gray-50 border-b border-gray-200">
+          <div className="flex space-x-1 px-6 py-2">
             {['overview', 'leave', 'view', 'cast'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
-                className={`px-8 py-4 rounded-2xl font-bold text-sm transition-all duration-500 relative overflow-hidden backdrop-blur-xl border ${
+                className={`px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-200 ${
                   activeTab === tab
-                    ? 'bg-gradient-to-r from-cyan-500/80 via-blue-600/80 to-violet-700/80 text-white shadow-2xl transform scale-110 border-white/40'
-                    : 'text-gray-700 bg-white/10 hover:bg-gradient-to-r hover:from-emerald-400/20 hover:via-cyan-500/20 hover:to-blue-600/20 hover:text-indigo-700 hover:shadow-xl hover:scale-105 border-white/20 hover:border-white/40'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-gray-600 hover:bg-gray-200 hover:text-gray-800'
                 }`}
-                style={{
-                  backdropFilter: 'blur(20px) saturate(150%)'
-                }}
               >
-                <span className="relative z-10 drop-shadow-sm">
-                  {tab === 'overview'
-                    ? '🎬 Overview'
-                    : tab === 'leave'
-                    ? '💬 Leave Comment'
-                    : tab === 'view'
-                    ? '👀 View Comments'
-                    : '🎭 Cast'}
-                </span>
-                {activeTab === tab && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-300/30 via-blue-400/30 to-violet-500/30 animate-pulse rounded-2xl blur-sm"></div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-50"></div>
+                {tab === 'overview'
+                  ? '🎬 Overview'
+                  : tab === 'leave'
+                  ? '💬 Leave Comment'
+                  : tab === 'view'
+                  ? '👀 View Comments'
+                  : '🎭 Cast'}
               </button>
             ))}
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-8 bg-gradient-to-br from-white/5 via-white/10 to-white/5 backdrop-blur-xl">
+        <div className="p-8 bg-white">
           {/* Overview */}
           {activeTab === 'overview' && (
             <div>
               <div className="flex gap-8 mb-8">
-                <div className="relative group">
-                  <div className="absolute -inset-6 bg-gradient-to-r from-cyan-400/30 via-purple-500/30 to-pink-500/30 rounded-3xl blur-2xl opacity-60 group-hover:opacity-100 transition-all duration-700 animate-pulse"></div>
-                  <img
-                    src={movie.poster_path?.startsWith('http') 
-                      ? movie.poster_path 
-                      : movie.poster_path 
-                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                        : 'https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=600'
-                    }
-                    alt={movie.title}
-                    className="w-80 h-auto rounded-3xl shadow-2xl transform transition-all duration-700 group-hover:scale-110 border-4 border-white/50 backdrop-blur-sm relative z-10"
-                    style={{
-                      filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.3))'
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 via-transparent to-cyan-400/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-all duration-500 z-20"></div>
+                <div className="flex flex-col space-y-4">
+                  {/* Main Poster Image */}
+                  <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <img
+                      src={movie.poster_path?.startsWith('http') 
+                        ? movie.poster_path 
+                        : movie.poster_path 
+                          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                          : 'https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=600'
+                      }
+                      alt={movie.title}
+                      className="w-80 h-auto object-cover"
+                    />
+                  </div>
+                  
+                  {/* Second Image Space */}
+                  <div className="bg-gray-100 rounded-lg shadow-lg overflow-hidden border-2 border-dashed border-gray-300 flex items-center justify-center">
+                    <img
+                      src={movie.backdrop_path?.startsWith('http') 
+                        ? movie.backdrop_path 
+                        : movie.backdrop_path 
+                          ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
+                          : 'https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=600'
+                      }
+                      alt={`${movie.title} scene`}
+                      className="w-80 h-48 object-cover"
+                    />
+                  </div>
                 </div>
                 <div className="flex-1 space-y-6">
                   <div className="flex items-center flex-wrap gap-4 mb-6">
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-emerald-400/90 via-teal-500/90 to-cyan-600/90 backdrop-blur-2xl rounded-3xl px-6 py-3 shadow-2xl border-2 border-white/40 relative overflow-hidden">
-                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-300/40 via-orange-400/40 to-red-500/40 blur-xl animate-pulse"></div>
-                      <Star className="w-7 h-7 fill-white text-white drop-shadow-2xl relative z-10" />
-                      <span className="font-black text-white text-xl drop-shadow-2xl relative z-10">
+                    <div className="flex items-center gap-2 bg-yellow-500 rounded-lg px-4 py-2 shadow-md">
+                      <Star className="w-5 h-5 fill-white text-white" />
+                      <span className="font-semibold text-white text-lg">
                         {movie.vote_average}/10
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 bg-gradient-to-r from-indigo-600/90 via-purple-700/90 to-pink-700/90 backdrop-blur-2xl text-white rounded-3xl px-6 py-3 shadow-2xl border-2 border-white/40">
-                      <Calendar className="w-6 h-6 relative z-10" />
-                      <span className="font-bold text-lg relative z-10">{new Date(movie.release_date).getFullYear()}</span>
+                    <div className="flex items-center gap-2 bg-gray-600 text-white rounded-lg px-4 py-2 shadow-md">
+                      <Calendar className="w-5 h-5" />
+                      <span className="font-semibold">{new Date(movie.release_date).getFullYear()}</span>
                     </div>
                     {movie.isGame && (
-                      <span className="bg-gradient-to-r from-violet-600/90 via-purple-700/90 to-indigo-800/90 backdrop-blur-2xl text-white px-6 py-3 rounded-3xl font-bold text-sm shadow-2xl border-2 border-white/40 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400/30 to-indigo-500/30 blur-sm animate-pulse"></div>
-                        <span className="relative z-10">🎮 Game</span>
+                      <span className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-md">
+                        🎮 Game
                       </span>
                     )}
                     {movie.isSeries && (
-                      <span className="bg-gradient-to-r from-blue-600/90 via-cyan-600/90 to-teal-700/90 backdrop-blur-2xl text-white px-6 py-3 rounded-3xl font-bold text-sm shadow-2xl border-2 border-white/40 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/30 to-cyan-500/30 blur-sm animate-pulse"></div>
-                        <span className="relative z-10">📺 Series</span>
+                      <span className="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-md">
+                        📺 Series
                       </span>
                     )}
                     {movie.isAnime && (
-                      <span className="bg-gradient-to-r from-pink-600/90 via-rose-600/90 to-red-700/90 backdrop-blur-2xl text-white px-6 py-3 rounded-3xl font-bold text-sm shadow-2xl border-2 border-white/40 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-pink-400/30 to-rose-500/30 blur-sm animate-pulse"></div>
-                        <span className="relative z-10">🎌 Anime</span>
+                      <span className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-md">
+                        🎌 Anime
                       </span>
                     )}
                   </div>
-                  <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-2xl shadow-inner border border-gray-200/50 mb-6">
-                    <p className="text-gray-800 leading-relaxed text-lg font-medium">
+                  <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-6">
+                    <p className="text-gray-800 leading-relaxed text-base">
                       {movie.overview}
                     </p>
                   </div>
@@ -205,7 +192,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                   
                   {/* External Links */}
                   {(movie.watchLink || movie.buyLink) && (
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200 mb-6">
+                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6">
                       <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
                         <ExternalLink className="w-5 h-5 mr-2 text-blue-600" />
                         {movie.isGame ? 'Buy Game' : movie.isSeries || movie.isAnime ? 'Watch Now' : 'Watch Movie'}
@@ -216,7 +203,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                             href={movie.watchLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                            className="flex items-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
                           >
                             <Eye className="w-5 h-5" />
                             <span>Watch Now</span>
@@ -227,7 +214,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                             href={movie.buyLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+                            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
                           >
                             <ShoppingCart className="w-5 h-5" />
                             <span>Buy Game</span>
@@ -239,9 +226,9 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                   
                   {/* System Requirements for Games */}
                   {movie.isGame && (movie.minimumRequirements || movie.recommendedRequirements) && (
-                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
-                      <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center">
-                        <span className="text-blue-600 mr-2">🖥️</span>
+                    <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <span className="text-gray-600 mr-2">🖥️</span>
                         System Requirements
                       </h3>
                       
