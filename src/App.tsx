@@ -122,6 +122,15 @@ function App() {
             overview: movie.overview + ' This is an anime adaptation.'
           }));
           break;
+        case 'games':
+          newMovies = await movieService.getPopularMovies();
+          // Filter for games (mock data for now)
+          newMovies = newMovies.slice(0, 8).map(movie => ({
+            ...movie,
+            title: movie.title.replace(/^The /, '') + ' (Game)',
+            overview: movie.overview + ' This is a video game adaptation with immersive gameplay and stunning graphics.'
+          }));
+          break;
         case 'trending':
           newMovies = await movieService.getTrendingMovies();
           break;
@@ -170,6 +179,8 @@ function App() {
         return 'TV Series';
       case 'anime':
         return 'Anime';
+      case 'games':
+        return 'Games';
       case 'trending':
         return 'Trending Now';
       case 'top-rated':
@@ -335,6 +346,12 @@ function App() {
                   onClick={() => handleNavigate('anime')}
                 >
                   Anime
+                </li>
+                <li 
+                  className="hover:text-white transition-colors cursor-pointer"
+                  onClick={() => handleNavigate('games')}
+                >
+                  Games
                 </li>
                 <li 
                   className="hover:text-white transition-colors cursor-pointer"

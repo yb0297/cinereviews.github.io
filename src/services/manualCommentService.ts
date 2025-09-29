@@ -110,6 +110,24 @@ export const manualCommentService = {
         message: 'Made me cry! The emotional depth combined with the scientific accuracy was beautiful.',
         createdAt: '2024-12-12T14:20:00.000Z'
       }
+    },
+    {
+      id: 'sample_5',
+      movieId: 6,
+      movieTitle: 'Cyberpunk 2077',
+      name: 'Alex Chen',
+      email: 'alex@example.com',
+      message: 'Amazing open-world RPG! The graphics and storyline are incredible. Night City feels so alive!',
+      createdAt: '2024-12-11T16:30:00.000Z'
+    },
+    {
+      id: 'sample_6',
+      movieId: 7,
+      movieTitle: 'The Witcher 3',
+      name: 'Lisa Wang',
+      email: 'lisa@example.com',
+      message: 'Best RPG ever made! The side quests are better than most games\' main stories. Geralt is such a great character.',
+      createdAt: '2024-12-10T12:45:00.000Z'
     ];
 
     this.saveAllComments(sampleComments);
