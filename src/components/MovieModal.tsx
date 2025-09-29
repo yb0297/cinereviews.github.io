@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Calendar, User, MessageSquare, ExternalLink, ShoppingCart, Eye, Play, Gamepad2 } from 'lucide-react';
+import { X, Star, Calendar, User, MessageSquare, ExternalLink, ShoppingCart, Eye, Play, Gamepad2, Youtube } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { AdBanner } from './AdBanner';
 import { manualCommentService, ManualComment } from '../services/manualCommentService';
@@ -191,7 +191,7 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                   )}
                   
                   {/* Action Buttons */}
-                  {(movie.watchLink || movie.trailerLink || movie.buyLink) && (
+                  {(movie.watchLink || movie.trailerLink || movie.buyLink || movie.gameplayVideoLink) && (
                     <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200 mb-6">
                       <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                         <ExternalLink className="w-5 h-5 mr-2 text-blue-600" />
@@ -207,6 +207,15 @@ export const MovieModal: React.FC<MovieModalProps> = ({
                               >
                                 <Gamepad2 className="w-5 h-5" />
                                 <span>Watch Gameplay</span>
+                              </button>
+                            )}
+                            {movie.gameplayVideoLink && (
+                              <button
+                                onClick={() => window.open(movie.gameplayVideoLink, '_blank')}
+                                className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-md"
+                              >
+                                <Youtube className="w-5 h-5" />
+                                <span>View Gameplay Video</span>
                               </button>
                             )}
                             {movie.buyLink && (

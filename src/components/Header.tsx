@@ -11,6 +11,7 @@ import {
   Tv,
   Gamepad2,
   User,
+  Flame,
 } from "lucide-react";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 import { Logo } from "./Logo";
@@ -56,6 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: "series", label: "Series", icon: Tv },
     { id: "anime", label: "Anime", icon: Play },
     { id: "games", label: "Games", icon: Gamepad2 },
+    { id: "news", label: "News", icon: Flame },
     { id: "trending", label: "Trending", icon: TrendingUp },
     { id: "top-rated", label: "Top Rated", icon: Star },
     { id: "coming-soon", label: "Coming Soon", icon: Clock },

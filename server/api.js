@@ -146,6 +146,6 @@ app.delete('/api/comments/:commentId', async (req, res) => {
   }
 });
 
-app.listen(port, 'localhost', () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Comment API server running on port ${port}`);
 });

@@ -17,7 +17,10 @@ import { TopRatedSection } from './components/TopRatedSection';
 import { ComingSoonSection } from './components/ComingSoonSection';
 import { UserPersonalizedSection } from './components/UserPersonalizedSection';
 import { MiniCarousel } from './components/MiniCarousel';
+import { NewsCarousel } from './components/NewsCarousel';
+import { NewsPage } from './components/NewsPage';
 import { movieService } from './services/movieService';
+import { newsService } from './services/newsService';
 import { Movie } from './types/movie';
 
 function App() {
@@ -249,6 +252,14 @@ function App() {
             onMovieClick={handleMovieClick}
           />
 
+          {/* News Section */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <NewsCarousel 
+              news={newsService.getLatestNews(8)} 
+              title="Entertainment News"
+            />
+          </div>
+
           {/* Trending Carousel on Homepage */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <TrendingCarousel
@@ -291,6 +302,11 @@ function App() {
             onMovieClick={handleMovieClick}
           />
         </div>
+      )}
+
+      {/* News Page */}
+      {currentSection === 'news' && !searchQuery && (
+        <NewsPage />
       )}
 
       {/* Mini Carousels for Category Pages */}
