@@ -67,6 +67,32 @@ const movies: Movie[] = [
     genre_ids: [12, 18, 878],
     pros: ["Stunning desert cinematography", "Epic world-building", "Excellent cast performances", "Faithful to source material"],
     cons: ["Only covers half of the first book", "Slow pacing in parts", "Complex mythology for newcomers"]
+  },
+  {
+    id: 6,
+    title: "The Conjuring",
+    poster_path: "https://images.pexels.com/photos/7991987/pexels-photo-7991987.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991987/pexels-photo-7991987.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "Paranormal investigators Ed and Lorraine Warren work to help a family terrorized by a dark presence in their farmhouse.",
+    release_date: "2013-07-19",
+    vote_average: 7.5,
+    vote_count: 45000,
+    genre_ids: [27, 53, 9648],
+    pros: ["Genuinely scary atmosphere", "Great performances", "Excellent cinematography", "Classic horror storytelling"],
+    cons: ["Very frightening content", "Jump scares may be intense", "Not suitable for sensitive viewers"]
+  },
+  {
+    id: 7,
+    title: "Superbad",
+    poster_path: "https://images.pexels.com/photos/7991456/pexels-photo-7991456.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991456/pexels-photo-7991456.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "Two co-dependent high school seniors are forced to deal with separation anxiety after their plan to stage a booze-soaked party goes awry.",
+    release_date: "2007-08-17",
+    vote_average: 7.6,
+    vote_count: 28000,
+    genre_ids: [35, 18, 10749],
+    pros: ["Hilarious dialogue", "Great chemistry between leads", "Authentic teenage experience", "Memorable supporting characters"],
+    cons: ["Crude humor throughout", "Strong language", "May not appeal to all audiences"]
   }
 ];
 
@@ -86,6 +112,21 @@ const series: Movie[] = [
     pros: ["Outstanding character development", "Brilliant writing and acting", "Perfect pacing and tension", "Memorable dialogues"],
     cons: ["Can be very intense", "Slow start for some viewers", "Dark themes throughout"],
     watchLink: "https://www.netflix.com/title/70143836"
+  },
+  {
+    id: 104,
+    title: "The Walking Dead",
+    poster_path: "https://images.pexels.com/photos/7991445/pexels-photo-7991445.jpeg?auto=compress&cs=tinysrgb&w=400",
+    backdrop_path: "https://images.pexels.com/photos/7991445/pexels-photo-7991445.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    overview: "Sheriff's deputy Rick Grimes awakens from a coma to find a post-apocalyptic world dominated by flesh-eating zombies. He sets out to find his family.",
+    release_date: "2010-10-31",
+    vote_average: 8.1,
+    vote_count: 89000,
+    genre_ids: [27, 18, 53],
+    isSeries: true,
+    pros: ["Intense zombie action", "Character development", "Survival themes", "Post-apocalyptic atmosphere"],
+    cons: ["Very violent and gory", "Can be emotionally heavy", "Some seasons weaker than others"],
+    watchLink: "https://www.netflix.com/title/70177057"
   },
   {
     id: 102,
@@ -179,7 +220,7 @@ const games: Movie[] = [
     release_date: "2020-12-10",
     vote_average: 8.2,
     vote_count: 45000,
-    genre_ids: [28, 878, 12],
+    genre_ids: [28, 878, 40001, 40010],
     isGame: true,
     pros: ["Incredible Night City atmosphere", "Engaging main storyline", "Deep character customization", "Impressive graphics on high-end systems"],
     cons: ["Launch was buggy", "AI behavior can be inconsistent", "Some promised features missing", "Performance issues on older consoles"],
@@ -208,7 +249,7 @@ const games: Movie[] = [
     release_date: "2015-05-19",
     vote_average: 9.3,
     vote_count: 52000,
-    genre_ids: [12, 14, 18],
+    genre_ids: [12, 14, 40001],
     isGame: true,
     pros: ["Exceptional storytelling", "Massive open world", "Meaningful side quests", "Beautiful graphics and music"],
     cons: ["Combat system can feel clunky", "Overwhelming amount of content", "Steep learning curve for newcomers"],
@@ -237,7 +278,7 @@ const games: Movie[] = [
     release_date: "2018-10-26",
     vote_average: 9.7,
     vote_count: 38000,
-    genre_ids: [28, 12, 18],
+    genre_ids: [28, 12, 40010],
     isGame: true,
     pros: ["Incredible attention to detail", "Immersive western atmosphere", "Strong narrative and characters", "Stunning visuals"],
     cons: ["Slow pacing may not suit everyone", "Controls can feel heavy", "Long missions with checkpoints"],
@@ -263,7 +304,7 @@ const games: Movie[] = [
 const mockMovies = [...movies, ...series, ...anime, ...games,
 ];
 
-// Mock genres
+// Mock genres - comprehensive list for movies, series, anime and games
 const mockGenres: Genre[] = [
   { id: 28, name: "Action" },
   { id: 12, name: "Adventure" },
@@ -274,6 +315,36 @@ const mockGenres: Genre[] = [
   { id: 878, name: "Science Fiction" },
   { id: 53, name: "Thriller" },
   { id: 36, name: "History" },
+  { id: 27, name: "Horror" },
+  { id: 9648, name: "Mystery" },
+  { id: 10749, name: "Romance" },
+  { id: 14, name: "Fantasy" },
+  { id: 37, name: "Western" },
+  { id: 10752, name: "War" },
+  { id: 99, name: "Documentary" },
+  { id: 10402, name: "Music" },
+  { id: 10751, name: "Family" },
+  { id: 10770, name: "TV Movie" },
+  // Game-specific genres
+  { id: 40001, name: "RPG" },
+  { id: 40002, name: "Shooter" },
+  { id: 40003, name: "Strategy" },
+  { id: 40004, name: "Racing" },
+  { id: 40005, name: "Sports" },
+  { id: 40006, name: "Fighting" },
+  { id: 40007, name: "Simulation" },
+  { id: 40008, name: "Puzzle" },
+  { id: 40009, name: "Platformer" },
+  { id: 40010, name: "Open World" },
+  // Anime-specific genres
+  { id: 50001, name: "Slice of Life" },
+  { id: 50002, name: "Shounen" },
+  { id: 50003, name: "Shoujo" },
+  { id: 50004, name: "Mecha" },
+  { id: 50005, name: "Supernatural" },
+  { id: 50006, name: "School" },
+  { id: 50007, name: "Isekai" },
+  { id: 50008, name: "Psychological" },
 ];
 
 // Mock comments
@@ -296,57 +367,69 @@ const mockComments: Record<number, { user: string; message: string; date: string
   ],
 };
 
+// Helper function to populate genres for movies
+const populateGenres = (contentList: Movie[]): Movie[] => {
+  return contentList.map(item => ({
+    ...item,
+    genres: item.genre_ids.map(genreId => 
+      mockGenres.find(genre => genre.id === genreId)
+    ).filter(Boolean) as Genre[]
+  }));
+};
+
 export const movieService = {
   async getPopularMovies(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...movies].sort((a, b) => b.vote_average - a.vote_average);
+    return populateGenres([...movies]).sort((a, b) => b.vote_average - a.vote_average);
   },
 
   async getMovies(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...movies];
+    return populateGenres([...movies]);
   },
 
   async getSeries(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...series];
+    return populateGenres([...series]);
   },
 
   async getAnime(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...anime];
+    return populateGenres([...anime]);
   },
 
   async getGames(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...games];
+    return populateGenres([...games]);
   },
 
   async getTrendingMovies(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...mockMovies].sort((a, b) => {
+    const trending = populateGenres([...mockMovies]).sort((a, b) => {
       const scoreA = a.vote_average * Math.log(a.vote_count);
       const scoreB = b.vote_average * Math.log(b.vote_count);
       return scoreB - scoreA;
     });
+    return trending;
   },
 
   async getTopRated(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    return [...mockMovies].sort((a, b) => b.vote_average - a.vote_average).slice(0, 20);
+    return populateGenres([...mockMovies]).sort((a, b) => b.vote_average - a.vote_average).slice(0, 20);
   },
 
   async getComingSoon(): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
     const now = new Date();
-    return [...mockMovies].filter(movie => new Date(movie.release_date) > now);
+    return populateGenres([...mockMovies]).filter(movie => new Date(movie.release_date) > now);
   },
 
   async searchMovies(query: string): Promise<Movie[]> {
     await new Promise(res => setTimeout(res, 300));
-    if (!query.trim()) return mockMovies;
+    const allContent = populateGenres([...mockMovies]);
+    if (!query.trim()) return allContent;
     const searchTerm = query.toLowerCase().trim();
-    return mockMovies.filter(
+    return allContent.filter(
       movie =>
         movie.title.toLowerCase().includes(searchTerm) ||
         movie.overview.toLowerCase().includes(searchTerm)
@@ -370,7 +453,7 @@ export const movieService = {
       case 'coming-soon':
         return this.getComingSoon();
       default:
-        return [...mockMovies];
+        return populateGenres([...mockMovies]);
     }
   },
 

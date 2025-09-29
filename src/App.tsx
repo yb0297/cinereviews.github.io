@@ -11,6 +11,9 @@ import { AdBanner } from './components/AdBanner';
 import { AdSidebar } from './components/AdSidebar';
 import { ContactForm } from './components/ContactForm';
 import { ProfileModal } from './components/ProfileModal';
+import { TrendingCarousel } from './components/TrendingCarousel';
+import { TopRatedSection } from './components/TopRatedSection';
+import { ComingSoonSection } from './components/ComingSoonSection';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
@@ -22,7 +25,7 @@ function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
   const [carouselMovies, setCarouselMovies] = useState<Movie[]>([]);
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [, setCarouselIndex] = useState(0);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -223,6 +226,61 @@ function App() {
           onWatchTrailer={() => console.log('Watch trailer')}
           onViewDetails={() => handleMovieClick(featuredMovie)}
         />
+      )}
+
+      {/* Trending Carousel */}
+      {currentSection === 'trending' && !searchQuery && movies.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <TrendingCarousel
+            movies={movies.slice(0, 8)} // Show top 8 trending items
+            onMovieClick={handleMovieClick}
+          />
+        </div>
+      )}
+
+      {/* Homepage Sections */}
+      {currentSection === 'home' && !searchQuery && movies.length > 0 && (
+        <div className="bg-gray-900">
+          {/* Trending Carousel on Homepage */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <TrendingCarousel
+              movies={carouselMovies.slice(0, 6)}
+              onMovieClick={handleMovieClick}
+            />
+          </div>
+
+          {/* Top Rated Section */}
+          <TopRatedSection
+            movies={movies}
+            onMovieClick={handleMovieClick}
+          />
+
+          {/* Coming Soon Section */}
+          <ComingSoonSection
+            movies={movies}
+            onMovieClick={handleMovieClick}
+          />
+        </div>
+      )}
+
+      {/* Top Rated Page */}
+      {currentSection === 'top-rated' && !searchQuery && movies.length > 0 && (
+        <div className="bg-gray-900">
+          <TopRatedSection
+            movies={movies}
+            onMovieClick={handleMovieClick}
+          />
+        </div>
+      )}
+
+      {/* Coming Soon Page */}
+      {currentSection === 'coming-soon' && !searchQuery && movies.length > 0 && (
+        <div className="bg-gray-900">
+          <ComingSoonSection
+            movies={movies}
+            onMovieClick={handleMovieClick}
+          />
+        </div>
       )}
 
       {/* Top Banner Ad */}

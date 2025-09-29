@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, CreditCard as Edit3, Save, Calendar, Star, Film } from 'lucide-react';
+import { X, User, CreditCard as Edit3, Save, Calendar, Star, Film, Heart, Bookmark } from 'lucide-react';
 import { profileService } from '../services/profileService';
-import { commentService } from '../services/commentService';
+import { movieService } from '../services/movieService';
 import { Profile, ProfileFormData } from '../types/profile';
-import { Comment } from '../types/comment';
+import { Movie } from '../types/movie';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface ProfileModalProps {
@@ -14,10 +14,13 @@ interface ProfileModalProps {
 
 export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, user }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [userReviews, setUserReviews] = useState<Review[]>([]);
+  const [userReviews, setUserReviews] = useState<any[]>([]);
+  const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
+  const [watchlistMovies, setWatchlistMovies] = useState<Movie[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'favorites' | 'watchlist'>('overview');
   const [formData, setFormData] = useState<ProfileFormData>({
     full_name: '',
     username: '',
@@ -28,6 +31,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
     if (isOpen && user) {
       loadProfile();
       loadUserReviews();
+      loadFavoriteMovies();
+      loadWatchlistMovies();
     }
   }, [isOpen, user]);
 
@@ -62,10 +67,44 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
     if (!user) return;
     
     try {
-      const reviews = await reviewService.getUserReviews();
+      const reviews: any[] = []; // TODO: Load user reviews if needed
       setUserReviews(reviews);
     } catch (error) {
       console.error('Error loading user reviews:', error);
+    }
+  };
+
+  const loadFavoriteMovies = async () => {
+    try {
+      const favoriteIds = JSON.parse(localStorage.getItem('favorites') || '[]');
+      if (favoriteIds.length === 0) {
+        setFavoriteMovies([]);
+        return;
+      }
+      
+      // Get all movies and filter by favorite IDs
+      const allMovies = await movieService.getContentByCategory('all');
+      const favorites = allMovies.filter(movie => favoriteIds.includes(movie.id));
+      setFavoriteMovies(favorites);
+    } catch (error) {
+      console.error('Error loading favorite movies:', error);
+    }
+  };
+
+  const loadWatchlistMovies = async () => {
+    try {
+      const watchlistIds = JSON.parse(localStorage.getItem('watchlist') || '[]');
+      if (watchlistIds.length === 0) {
+        setWatchlistMovies([]);
+        return;
+      }
+      
+      // Get all movies and filter by watchlist IDs
+      const allMovies = await movieService.getContentByCategory('all');
+      const watchlist = allMovies.filter(movie => watchlistIds.includes(movie.id));
+      setWatchlistMovies(watchlist);
+    } catch (error) {
+      console.error('Error loading watchlist movies:', error);
     }
   };
 
@@ -96,8 +135,22 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
   };
 
   const averageRating = userReviews.length > 0 
-    ? (userReviews.reduce((sum, review) => sum + review.rating, 0) / userReviews.length).toFixed(1)
+    ? (userReviews.reduce((sum: number, review: any) => sum + review.rating, 0) / userReviews.length).toFixed(1)
     : '0.0';
+
+  const removeFromFavorites = async (movieId: number) => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    const updatedFavorites = favorites.filter((id: number) => id !== movieId);
+    await profileService.updateFavorites(updatedFavorites);
+    loadFavoriteMovies();
+  };
+
+  const removeFromWatchlist = async (movieId: number) => {
+    const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
+    const updatedWatchlist = watchlist.filter((id: number) => id !== movieId);
+    await profileService.updateWatchlist(updatedWatchlist);
+    loadWatchlistMovies();
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -221,6 +274,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
                           <span>{userReviews.length} Reviews</span>
                         </div>
                         <div className="flex items-center space-x-1">
+                          <Heart className="w-4 h-4" />
+                          <span>{favoriteMovies.length} Favorites</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Bookmark className="w-4 h-4" />
+                          <span>{watchlistMovies.length} Watchlist</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
                           <Star className="w-4 h-4" />
                           <span>Avg Rating: {averageRating}/10</span>
                         </div>
@@ -230,9 +291,46 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
                 </div>
               </div>
 
-              {/* User Reviews */}
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">My Reviews ({userReviews.length})</h3>
+              {/* Tab Navigation */}
+              <div className="border-b border-gray-200 mb-6">
+                <nav className="flex space-x-8">
+                  <button
+                    onClick={() => setActiveTab('overview')}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === 'overview'
+                        ? 'border-red-500 text-red-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    Overview
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('favorites')}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === 'favorites'
+                        ? 'border-red-500 text-red-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    Favorites ({favoriteMovies.length})
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('watchlist')}
+                    className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === 'watchlist'
+                        ? 'border-red-500 text-red-600'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                  >
+                    Watchlist ({watchlistMovies.length})
+                  </button>
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              {activeTab === 'overview' && (
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">My Reviews ({userReviews.length})</h3>
                 
                 {userReviews.length === 0 ? (
                   <div className="text-center py-8 bg-gray-50 rounded-lg">
@@ -263,14 +361,113 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, use
                             review.recommendation === 'neutral' ? 'bg-yellow-100 text-yellow-700' :
                             'bg-red-100 text-red-700'
                           }`}>
-                            {review.recommendation.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            {review.recommendation.replace('_', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                           </span>
                         </div>
                       </div>
                     ))}
                   </div>
                 )}
-              </div>
+                </div>
+              )}
+
+              {/* Favorites Tab */}
+              {activeTab === 'favorites' && (
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">My Favorites ({favoriteMovies.length})</h3>
+                  
+                  {favoriteMovies.length === 0 ? (
+                    <div className="text-center py-8 bg-gray-50 rounded-lg">
+                      <Heart className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500">No favorites yet</p>
+                      <p className="text-gray-400 text-sm">Start adding movies to your favorites!</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {favoriteMovies.map((movie) => (
+                        <div key={movie.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
+                          <div className="relative">
+                            <img
+                              src={movie.poster_path || 'https://via.placeholder.com/300x450'}
+                              alt={movie.title}
+                              className="w-full h-32 object-cover"
+                            />
+                            <button
+                              onClick={() => removeFromFavorites(movie.id)}
+                              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                              title="Remove from favorites"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                            <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                              {movie.isGame ? '🎮' : movie.isSeries ? '📺' : movie.isAnime ? '🎌' : '🎬'}
+                            </div>
+                          </div>
+                          <div className="p-3">
+                            <h4 className="font-medium text-sm text-gray-900 line-clamp-2 mb-1">{movie.title}</h4>
+                            <div className="flex items-center justify-between text-xs text-gray-500">
+                              <span>{new Date(movie.release_date).getFullYear()}</span>
+                              <div className="flex items-center space-x-1">
+                                <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                                <span>{movie.vote_average.toFixed(1)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Watchlist Tab */}
+              {activeTab === 'watchlist' && (
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">My Watchlist ({watchlistMovies.length})</h3>
+                  
+                  {watchlistMovies.length === 0 ? (
+                    <div className="text-center py-8 bg-gray-50 rounded-lg">
+                      <Bookmark className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500">No items in watchlist</p>
+                      <p className="text-gray-400 text-sm">Add movies you want to watch later!</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                      {watchlistMovies.map((movie) => (
+                        <div key={movie.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow group">
+                          <div className="relative">
+                            <img
+                              src={movie.poster_path || 'https://via.placeholder.com/300x450'}
+                              alt={movie.title}
+                              className="w-full h-32 object-cover"
+                            />
+                            <button
+                              onClick={() => removeFromWatchlist(movie.id)}
+                              className="absolute top-2 right-2 p-1 bg-blue-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-blue-600"
+                              title="Remove from watchlist"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                            <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                              {movie.isGame ? '🎮' : movie.isSeries ? '📺' : movie.isAnime ? '🎌' : '🎬'}
+                            </div>
+                          </div>
+                          <div className="p-3">
+                            <h4 className="font-medium text-sm text-gray-900 line-clamp-2 mb-1">{movie.title}</h4>
+                            <div className="flex items-center justify-between text-xs text-gray-500">
+                              <span>{new Date(movie.release_date).getFullYear()}</span>
+                              <div className="flex items-center space-x-1">
+                                <Star className="w-3 h-3 text-yellow-400 fill-current" />
+                                <span>{movie.vote_average.toFixed(1)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

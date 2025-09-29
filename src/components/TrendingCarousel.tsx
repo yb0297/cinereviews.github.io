@@ -36,8 +36,6 @@ export const TrendingCarousel: React.FC<TrendingCarouselProps> = ({ movies, onMo
 
   if (movies.length === 0) return null;
 
-  const currentMovie = movies[currentIndex];
-
   return (
     <div className="relative overflow-hidden bg-gray-900 rounded-xl shadow-2xl">
       {/* Main Carousel */}
