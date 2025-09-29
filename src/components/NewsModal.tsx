@@ -46,7 +46,7 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
     return content.split('\n').map((paragraph, index) => {
       if (paragraph.trim() === '') return null;
       return (
-        <p key={index} className="text-gray-300 text-base leading-relaxed mb-4">
+        <p key={index} className="text-gray-300 text-base md:text-lg lg:text-xl leading-relaxed md:leading-loose mb-4 md:mb-6 max-w-none">
           {paragraph}
         </p>
       );
@@ -54,20 +54,20 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2">
-      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-7xl max-h-[95vh] overflow-hidden relative">
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-1 md:p-4">
+      <div className="bg-gray-900 rounded-none md:rounded-2xl shadow-2xl w-full h-full md:w-[95vw] md:h-[95vh] overflow-hidden relative animate-in fade-in duration-300">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full z-10 transition-colors duration-200"
+          className="absolute top-4 right-4 md:top-6 md:right-6 bg-gray-800/90 hover:bg-gray-700 text-white p-3 md:p-4 rounded-full z-20 transition-all duration-200 hover:scale-110 backdrop-blur-sm"
         >
-          <X className="w-5 h-5" />
+          <X className="w-6 h-6 md:w-7 md:h-7" />
         </button>
 
         {/* Scrollable Content */}
-        <div className="overflow-y-auto max-h-[95vh]">
+        <div className="overflow-y-auto h-full">
           {/* Header Image */}
-          <div className="relative h-96 overflow-hidden">
+          <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden">
             <img
               src={news.imageUrl}
               alt={news.title}
@@ -107,14 +107,14 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
           </div>
 
           {/* Article Content */}
-          <div className="p-12">
+          <div className="px-4 py-6 md:px-8 lg:px-16 xl:px-24 md:py-12">
             {/* Title */}
-            <h1 className="text-5xl font-black text-white mb-8 leading-tight max-w-5xl">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-6 md:mb-8 leading-tight max-w-6xl">
               {news.title}
             </h1>
 
             {/* Meta Information */}
-            <div className="flex items-center space-x-6 mb-8 text-sm text-gray-400">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 mb-6 md:mb-8 text-sm md:text-base text-gray-400">
               <div className="flex items-center space-x-2">
                 <User className="w-4 h-4" />
                 <span>By {news.author}</span>
@@ -132,35 +132,35 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
             </div>
 
             {/* Excerpt */}
-            <div className="bg-gray-800 border-l-4 border-orange-500 p-8 mb-10 rounded-r-lg max-w-4xl">
-              <p className="text-gray-300 text-xl italic leading-relaxed">
+            <div className="bg-gray-800 border-l-4 border-orange-500 p-4 md:p-6 lg:p-8 mb-8 md:mb-10 rounded-r-lg max-w-5xl">
+              <p className="text-gray-300 text-lg md:text-xl lg:text-2xl italic leading-relaxed">
                 {news.excerpt}
               </p>
             </div>
 
             {/* Article Content */}
-            <div className="prose prose-invert max-w-5xl text-lg leading-relaxed">
+            <div className="prose prose-invert max-w-6xl text-base md:text-lg lg:text-xl leading-relaxed md:leading-loose space-y-4 md:space-y-6">
               {formatContent(news.content)}
             </div>
 
             {/* Article Image (Additional Image) */}
-            <div className="my-8">
+            <div className="my-8 md:my-12">
               <img
                 src={news.imageUrl}
                 alt="Article content"
-                className="w-full rounded-lg shadow-lg"
+                className="w-full rounded-lg shadow-lg max-h-96 md:max-h-[500px] object-cover"
               />
-              <p className="text-gray-500 text-sm mt-2 text-center">
+              <p className="text-gray-500 text-sm md:text-base mt-2 md:mt-4 text-center">
                 Related content from {news.category} category
               </p>
             </div>
 
             {/* Tags */}
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-12">
               {news.tags.map((tag, index) => (
                 <span 
                   key={index}
-                  className="bg-gray-800 text-gray-300 px-3 py-1 rounded-full text-sm font-medium hover:bg-gray-700 transition-colors"
+                  className="bg-gray-800 text-gray-300 px-3 md:px-4 py-1 md:py-2 rounded-full text-sm md:text-base font-medium hover:bg-gray-700 transition-colors"
                 >
                   #{tag}
                 </span>
@@ -169,18 +169,18 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
 
             {/* Source Link */}
             {news.sourceUrl && (
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-                <div className="flex items-center justify-between">
+              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 md:p-6 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
-                    <h3 className="text-white font-semibold mb-1">Read Original Article</h3>
-                    <p className="text-gray-400 text-sm">View the complete story on the original source</p>
+                    <h3 className="text-white font-semibold mb-1 text-base md:text-lg">Read Original Article</h3>
+                    <p className="text-gray-400 text-sm md:text-base">View the complete story on the original source</p>
                   </div>
                   <button
                     onClick={() => window.open(news.sourceUrl, '_blank')}
-                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 flex items-center space-x-2"
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 flex items-center justify-center space-x-2 text-sm md:text-base"
                   >
                     <span>Visit Source</span>
-                    <ExternalLink className="w-4 h-4" />
+                    <ExternalLink className="w-4 h-4 md:w-5 md:h-5" />
                   </button>
                 </div>
               </div>

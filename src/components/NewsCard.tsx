@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, User, ExternalLink, Flame } from 'lucide-react';
+import { Clock, User, ExternalLink, Flame, ChevronRight, ChevronLeft } from 'lucide-react';
 import { NewsItem } from '../types/news';
 import { NewsModal } from './NewsModal';
 
@@ -9,6 +9,7 @@ interface NewsCardProps {
 
 export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'movie': return 'bg-red-500';
@@ -40,10 +41,27 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
     return `${diffInDays}d ago`;
   };
 
+  const formatContent = (content: string) => {
+    return content.split('\n').map((paragraph, index) => {
+      if (paragraph.trim() === '') return null;
+      return (
+        <p key={index} className="text-gray-300 text-sm leading-relaxed mb-3">
+          {paragraph}
+        </p>
+      );
+    }).filter(Boolean);
+  };
+
   return (
-    <div className="w-full bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-700">
+    <div className={`bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-700 ${
+      isExpanded 
+        ? 'w-full max-w-4xl transform scale-100' 
+        : 'w-full max-w-sm hover:scale-105'
+    }`}>
       {/* Image Header */}
-      <div className="relative h-48 overflow-hidden">
+      <div className={`relative overflow-hidden transition-all duration-500 ${
+        isExpanded ? 'h-64' : 'h-48'
+      }`}>
         <img
           src={news.imageUrl}
           alt={news.title}
@@ -83,66 +101,143 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6">
-        {/* Title */}
-        <h3 className="text-xl font-bold text-white mb-3 line-clamp-2 leading-tight">
-          {news.title}
-        </h3>
+      <div className={`transition-all duration-500 ${isExpanded ? 'p-8' : 'p-6'}`}>
+        <div className={`${isExpanded ? 'flex gap-6' : ''}`}>
+          {/* Left Column - Main Content */}
+          <div className={`${isExpanded ? 'flex-1' : ''}`}>
+            {/* Title */}
+            <h3 className={`font-bold text-white mb-3 leading-tight transition-all duration-300 ${
+              isExpanded ? 'text-2xl' : 'text-xl line-clamp-2'
+            }`}>
+              {news.title}
+            </h3>
 
-        {/* Excerpt */}
-        <p className="text-gray-300 text-sm mb-4 line-clamp-3 leading-relaxed">
-          {news.excerpt}
-        </p>
+            {/* Excerpt */}
+            <p className={`text-gray-300 text-sm mb-4 leading-relaxed transition-all duration-300 ${
+              isExpanded ? '' : 'line-clamp-3'
+            }`}>
+              {news.excerpt}
+            </p>
 
-        {/* Meta Information */}
-        <div className="flex items-center space-x-4 mb-4 text-xs text-gray-400">
-          <div className="flex items-center space-x-1">
-            <User className="w-3 h-3" />
-            <span>{news.author}</span>
+            {/* Expanded Content */}
+            {isExpanded && (
+              <div className="mb-6 animate-in fade-in duration-500">
+                <div className="bg-gray-700/50 rounded-lg p-4 mb-4">
+                  <h4 className="text-white font-semibold mb-3">Full Article Preview</h4>
+                  <div className="max-h-40 overflow-y-auto">
+                    {formatContent(news.content)}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Meta Information */}
+            <div className={`flex items-center mb-4 text-xs text-gray-400 transition-all duration-300 ${
+              isExpanded ? 'space-x-6' : 'space-x-4'
+            }`}>
+              <div className="flex items-center space-x-1">
+                <User className="w-3 h-3" />
+                <span>{news.author}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Clock className="w-3 h-3" />
+                <span>{formatTimeAgo(news.publishedAt)}</span>
+              </div>
+              {news.readTime && (
+                <span>{news.readTime} min read</span>
+              )}
+            </div>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-1 mb-4">
+              {(isExpanded ? news.tags : news.tags.slice(0, 3)).map((tag, index) => (
+                <span 
+                  key={index}
+                  className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs font-medium hover:bg-gray-600 transition-colors"
+                >
+                  #{tag}
+                </span>
+              ))}
+              {!isExpanded && news.tags.length > 3 && (
+                <span className="text-gray-500 text-xs py-1">
+                  +{news.tags.length - 3} more
+                </span>
+              )}
+            </div>
           </div>
-          <div className="flex items-center space-x-1">
-            <Clock className="w-3 h-3" />
-            <span>{formatTimeAgo(news.publishedAt)}</span>
-          </div>
-          {news.readTime && (
-            <span>{news.readTime} min read</span>
+
+          {/* Right Column - Expanded Actions */}
+          {isExpanded && (
+            <div className="w-64 flex-shrink-0 animate-in slide-in-from-right duration-500">
+              <div className="bg-gray-700/30 rounded-lg p-4 mb-4">
+                <h4 className="text-white font-semibold mb-3">Quick Actions</h4>
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => setIsModalOpen(true)}
+                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>Full Article</span>
+                  </button>
+                  {news.sourceUrl && (
+                    <button 
+                      onClick={() => window.open(news.sourceUrl, '_blank')}
+                      className="w-full bg-gray-600 hover:bg-gray-500 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex items-center justify-center space-x-2"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                      <span>Original Source</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+              
+              <div className="bg-gray-700/30 rounded-lg p-4">
+                <h4 className="text-white font-semibold mb-2">Category</h4>
+                <div className={`${getCategoryColor(news.category)} px-3 py-2 rounded-full flex items-center space-x-2 justify-center`}>
+                  <span className="text-white text-sm">
+                    {getCategoryEmoji(news.category)}
+                  </span>
+                  <span className="text-white font-semibold text-sm uppercase">
+                    {news.category}
+                  </span>
+                </div>
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1 mb-4">
-          {news.tags.slice(0, 3).map((tag, index) => (
-            <span 
-              key={index}
-              className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs font-medium hover:bg-gray-600 transition-colors"
-            >
-              #{tag}
-            </span>
-          ))}
-          {news.tags.length > 3 && (
-            <span className="text-gray-500 text-xs py-1">
-              +{news.tags.length - 3} more
-            </span>
-          )}
-        </div>
-
-        {/* Read Full Story Subcard */}
+        {/* Expand/Collapse Toggle */}
         <button 
-          onClick={() => setIsModalOpen(true)}
-          className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-all duration-200 cursor-pointer"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-all duration-200 cursor-pointer mt-4"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full">
-                <ExternalLink className="w-4 h-4 text-white" />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-2 rounded-full">
+                {isExpanded ? (
+                  <ChevronLeft className="w-4 h-4 text-white" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-white" />
+                )}
               </div>
               <div className="text-left">
-                <h4 className="text-white font-semibold text-sm">Read Full Story</h4>
-                <p className="text-gray-400 text-xs">Click to read the complete article</p>
+                <h4 className="text-white font-semibold text-sm">
+                  {isExpanded ? 'Collapse Article' : 'Expand to Read More'}
+                </h4>
+                <p className="text-gray-400 text-xs">
+                  {isExpanded 
+                    ? 'Click to collapse and see less content' 
+                    : 'Click to expand and see full preview'
+                  }
+                </p>
               </div>
             </div>
             <div className="text-gray-400">
-              <ExternalLink className="w-5 h-5" />
+              {isExpanded ? (
+                <ChevronLeft className="w-5 h-5" />
+              ) : (
+                <ChevronRight className="w-5 h-5" />
+              )}
             </div>
           </div>
         </button>

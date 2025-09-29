@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Fire, Users, Award } from 'lucide-react';
+import { TrendingUp, Flame, Users, Award } from 'lucide-react';
 import { Movie } from '../types/movie';
 
 interface ViralContentProps {
@@ -13,7 +13,7 @@ export const ViralContent: React.FC<ViralContentProps> = ({ movies, onMovieClick
   return (
     <div className="bg-gradient-to-r from-red-600 to-red-700 rounded-xl p-6 m-4 text-white">
       <div className="flex items-center space-x-2 mb-6">
-        <Fire className="w-6 h-6 text-yellow-400" />
+        <Flame className="w-6 h-6 text-yellow-400" />
         <h2 className="text-2xl font-bold">🔥 Viral Right Now</h2>
         <TrendingUp className="w-5 h-5 text-green-400" />
       </div>
@@ -32,7 +32,7 @@ export const ViralContent: React.FC<ViralContentProps> = ({ movies, onMovieClick
             />
             
             <div className="absolute top-2 left-2">
-              {index === 0 && <Fire className="w-5 h-5 text-yellow-400" />}
+              {index === 0 && <Flame className="w-5 h-5 text-yellow-400" />}
               {index === 1 && <Award className="w-5 h-5 text-yellow-400" />}
               {index === 2 && <TrendingUp className="w-5 h-5 text-green-400" />}
               {index === 3 && <Users className="w-5 h-5 text-blue-400" />}

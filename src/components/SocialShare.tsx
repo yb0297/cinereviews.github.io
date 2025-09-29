@@ -44,7 +44,7 @@ export const SocialShare: React.FC<SocialShareProps> = ({ movie, className = '' 
     <div className={`flex items-center space-x-2 ${className}`}>
       <span className="text-sm font-medium text-gray-600">Share:</span>
       
-      {navigator.share && (
+      {typeof navigator !== 'undefined' && 'share' in navigator && (
         <button
           onClick={() => handleShare('native')}
           className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-all duration-200"
