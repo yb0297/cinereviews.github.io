@@ -54,8 +54,8 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden relative">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2">
+      <div className="bg-gray-900 rounded-2xl shadow-2xl w-full max-w-7xl max-h-[95vh] overflow-hidden relative">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -65,9 +65,9 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
         </button>
 
         {/* Scrollable Content */}
-        <div className="overflow-y-auto max-h-[90vh]">
+        <div className="overflow-y-auto max-h-[95vh]">
           {/* Header Image */}
-          <div className="relative h-80 overflow-hidden">
+          <div className="relative h-96 overflow-hidden">
             <img
               src={news.imageUrl}
               alt={news.title}
@@ -76,9 +76,11 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />
             
             {/* Black Bookmark Ribbon */}
-            <div className="absolute top-0 right-6 w-16 h-20 bg-black shadow-lg">
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black"></div>
-              <div className="flex items-center justify-center h-full">
+            <div className="absolute top-0 right-6 w-16 h-24 bg-black shadow-lg"
+                 style={{
+                   clipPath: 'polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%)'
+                 }}>
+              <div className="flex items-center justify-center h-full pt-2">
                 <span className="text-white text-xs font-bold transform -rotate-90">NEWS</span>
               </div>
             </div>
@@ -105,9 +107,9 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
           </div>
 
           {/* Article Content */}
-          <div className="p-8">
+          <div className="p-12">
             {/* Title */}
-            <h1 className="text-4xl font-black text-white mb-6 leading-tight">
+            <h1 className="text-5xl font-black text-white mb-8 leading-tight max-w-5xl">
               {news.title}
             </h1>
 
@@ -130,14 +132,14 @@ export const NewsModal: React.FC<NewsModalProps> = ({ news, isOpen, onClose }) =
             </div>
 
             {/* Excerpt */}
-            <div className="bg-gray-800 border-l-4 border-orange-500 p-6 mb-8 rounded-r-lg">
-              <p className="text-gray-300 text-lg italic leading-relaxed">
+            <div className="bg-gray-800 border-l-4 border-orange-500 p-8 mb-10 rounded-r-lg max-w-4xl">
+              <p className="text-gray-300 text-xl italic leading-relaxed">
                 {news.excerpt}
               </p>
             </div>
 
             {/* Article Content */}
-            <div className="prose prose-invert max-w-none">
+            <div className="prose prose-invert max-w-5xl text-lg leading-relaxed">
               {formatContent(news.content)}
             </div>
 

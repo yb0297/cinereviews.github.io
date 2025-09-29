@@ -52,10 +52,12 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         
         {/* Black Bookmark Ribbon */}
-        <div className="absolute top-0 right-6 w-16 h-20 bg-black shadow-lg">
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black"></div>
-          <div className="flex items-center justify-center h-full">
-            <span className="text-white text-xs font-bold transform -rotate-90">NEW</span>
+        <div className="absolute top-0 right-6 w-16 h-24 bg-black shadow-lg"
+             style={{
+               clipPath: 'polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%)'
+             }}>
+          <div className="flex items-center justify-center h-full pt-2">
+            <span className="text-white text-xs font-bold transform -rotate-90">NEWS</span>
           </div>
         </div>
         
