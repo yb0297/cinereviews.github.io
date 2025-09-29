@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Clock, User, ExternalLink, Flame } from 'lucide-react';
 import { NewsItem } from '../types/news';
+import { NewsModal } from './NewsModal';
 
 interface NewsCarouselProps {
   news: NewsItem[];
@@ -10,6 +11,8 @@ interface NewsCarouselProps {
 export const NewsCarousel: React.FC<NewsCarouselProps> = ({ news, title = "Latest News" }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Auto-play functionality
   useEffect(() => {
@@ -170,7 +173,13 @@ export const NewsCarousel: React.FC<NewsCarouselProps> = ({ news, title = "Lates
                     </div>
 
                     {/* Read More Button */}
-                    <button className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg">
+                    <button 
+                      onClick={() => {
+                        setSelectedNews(item);
+                        setIsModalOpen(true);
+                      }}
+                      className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    >
                       <span>Read Full Story</span>
                       <ExternalLink className="w-4 h-4" />
                     </button>
@@ -226,6 +235,16 @@ export const NewsCarousel: React.FC<NewsCarouselProps> = ({ news, title = "Lates
           />
         </div>
       </div>
+
+      {/* News Modal */}
+      <NewsModal
+        news={selectedNews}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedNews(null);
+        }}
+      />
     </div>
   );
 };

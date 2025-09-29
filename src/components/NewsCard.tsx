@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Clock, User, ExternalLink, Flame } from 'lucide-react';
 import { NewsItem } from '../types/news';
+import { NewsModal } from './NewsModal';
 
 interface NewsCardProps {
   news: NewsItem;
 }
 
 export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const getCategoryColor = (category: string) => {
     switch (category) {
       case 'movie': return 'bg-red-500';
@@ -124,14 +126,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
         {/* Read Full Story Subcard */}
         <button 
-          onClick={() => {
-            if (news.sourceUrl) {
-              window.open(news.sourceUrl, '_blank');
-            } else {
-              // Fallback URL if no specific URL is provided
-              window.open(`/news/${news.id}`, '_blank');
-            }
-          }}
+          onClick={() => setIsModalOpen(true)}
           className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-all duration-200 cursor-pointer"
         >
           <div className="flex items-center justify-between">
@@ -150,6 +145,13 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
           </div>
         </button>
       </div>
+
+      {/* News Modal */}
+      <NewsModal
+        news={news}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

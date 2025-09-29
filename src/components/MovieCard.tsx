@@ -98,7 +98,7 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, user, onAu
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         {/* Black Bookmark Ribbon - Left Side */}
-        <div className="absolute top-0 left-6 w-16 h-20 bg-black shadow-lg">
+        <div className="absolute top-0 left-2 w-16 h-20 bg-black shadow-lg z-30">
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black"></div>
           <div className="flex items-center justify-center h-full">
             <span className="text-white text-xs font-bold transform -rotate-90">
@@ -112,38 +112,6 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, user, onAu
           <Star className="w-4 h-4 text-white fill-current" />
           <span className="text-white text-sm font-semibold">{formatRating(movie.vote_average)}</span>
         </div>
-
-        {/* Vertical Flag-shaped Ribbon for Genres - Left side beside rating */}
-        {movie.genres && movie.genres.length > 0 && (
-          <div className="absolute top-4 left-0 z-20">
-            <div className="relative">
-              {/* Flag shape with pointed bottom */}
-              <div 
-                className="bg-black/95 backdrop-blur-sm shadow-lg border-r-2 border-white/30"
-                style={{
-                  width: '70px',
-                  height: '100px',
-                  clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)'
-                }}
-              >
-                <div className="px-1 py-2 h-full flex flex-col justify-center">
-                  <div className="text-[8px] font-bold text-white text-center leading-tight">
-                    {movie.genres?.slice(0, 2).map((genre) => (
-                      <div key={genre.id} className="mb-0.5">
-                        {genre.name.length > 8 ? genre.name.substring(0, 8) + '...' : genre.name.toUpperCase()}
-                      </div>
-                    ))}
-                    {(movie.genres?.length || 0) > 2 && (
-                      <div className="text-white/70 text-[7px] mt-0.5">
-                        +{(movie.genres?.length || 0) - 2}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Action Buttons */}
         <div className="absolute bottom-4 left-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
