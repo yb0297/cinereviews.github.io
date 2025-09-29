@@ -94,7 +94,7 @@ export const NewsCarousel: React.FC<NewsCarouselProps> = ({ news, title = "Lates
           {news.map((item) => (
             <div 
               key={item.id} 
-              className="w-full flex-shrink-0 relative h-[450px]"
+              className="w-full flex-shrink-0 relative h-[600px]"
             >
               {/* Background Image */}
               <div 
@@ -133,12 +133,12 @@ export const NewsCarousel: React.FC<NewsCarouselProps> = ({ news, title = "Lates
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+                    <h3 className="text-6xl md:text-7xl font-black text-white mb-8 leading-tight">
                       {item.title}
                     </h3>
 
                     {/* Excerpt */}
-                    <p className="text-gray-300 text-xl mb-8 leading-relaxed">
+                    <p className="text-gray-300 text-2xl mb-10 leading-relaxed max-w-4xl">
                       {item.excerpt}
                     </p>
 

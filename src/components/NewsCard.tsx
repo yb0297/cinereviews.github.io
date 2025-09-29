@@ -39,7 +39,7 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
   };
 
   return (
-    <div className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-700">
+    <div className="w-full bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-700">
       {/* Image Header */}
       <div className="relative h-48 overflow-hidden">
         <img
@@ -48,6 +48,14 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
           className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        
+        {/* Black Bookmark Ribbon */}
+        <div className="absolute top-0 right-6 w-16 h-20 bg-black shadow-lg">
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-black"></div>
+          <div className="flex items-center justify-center h-full">
+            <span className="text-white text-xs font-bold transform -rotate-90">NEW</span>
+          </div>
+        </div>
         
         {/* Breaking/Category Badges */}
         <div className="absolute top-4 left-4 flex items-center space-x-2">
@@ -114,11 +122,23 @@ export const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
           )}
         </div>
 
-        {/* Read More Button */}
-        <button className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105">
-          <span>Read Full Story</span>
-          <ExternalLink className="w-4 h-4" />
-        </button>
+        {/* Read Full Story Subcard */}
+        <div className="bg-gray-700 border border-gray-600 rounded-lg p-3 hover:bg-gray-600 transition-all duration-200 cursor-pointer">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="bg-gradient-to-r from-orange-500 to-red-500 p-2 rounded-full">
+                <ExternalLink className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h4 className="text-white font-semibold text-sm">Read Full Story</h4>
+                <p className="text-gray-400 text-xs">Click to read the complete article</p>
+              </div>
+            </div>
+            <div className="text-gray-400">
+              <ExternalLink className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
