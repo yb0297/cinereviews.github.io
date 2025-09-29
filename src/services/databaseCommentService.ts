@@ -1,4 +1,4 @@
-import { Comment, CommentFormData } from '../types/comment';
+import { Comment } from '../types/comment';
 import { supabase } from '../lib/supabase';
 
 export const databaseCommentService = {
