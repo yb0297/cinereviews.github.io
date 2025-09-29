@@ -15,6 +15,7 @@ import { TrendingCarousel } from './components/TrendingCarousel';
 import { TopRatedSection } from './components/TopRatedSection';
 import { ComingSoonSection } from './components/ComingSoonSection';
 import { UserPersonalizedSection } from './components/UserPersonalizedSection';
+import { MiniCarousel } from './components/MiniCarousel';
 import { movieService } from './services/movieService';
 import { Movie } from './types/movie';
 
@@ -335,7 +336,21 @@ function App() {
               </div>
             ) : (
               <>
-                <MovieGrid movies={movies} onMovieClick={handleMovieClick} />
+                {/* Mini Carousel for specific category pages */}
+                {(currentSection === 'movies' || currentSection === 'series' || currentSection === 'anime' || currentSection === 'games') && !searchQuery && movies.length > 0 && (
+                  <MiniCarousel
+                    movies={movies.slice(0, 5)} // Show top 5 featured items
+                    onMovieClick={handleMovieClick}
+                    title={`Featured ${currentSection.charAt(0).toUpperCase() + currentSection.slice(1)}`}
+                  />
+                )}
+                
+                <MovieGrid 
+                  movies={movies} 
+                  onMovieClick={handleMovieClick} 
+                  user={user}
+                  onAuthClick={() => setIsAuthModalOpen(true)}
+                />
                 
                 {/* In-content Ad */}
                 {movies.length > 4 && (

@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Star, Calendar, Heart, Bookmark, BookmarkCheck } from 'lucide-react';
 import { Movie } from '../types/movie';
 import { profileService } from '../services/profileService';
+import type { User } from '@supabase/supabase-js';
 
 interface MovieCardProps {
   movie: Movie;
   onClick: (movie: Movie) => void;
+  user: User | null;
+  onAuthClick: () => void;
 }
 
-export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
+export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick, user, onAuthClick }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
 
@@ -22,6 +25,16 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
 
   const handleFavoriteToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Check if user is authenticated
+    if (!user) {
+      // Show sign-in prompt
+      if (window.confirm('Please sign in to add movies to your favorites. Would you like to sign in now?')) {
+        onAuthClick();
+      }
+      return;
+    }
+    
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     let updatedFavorites;
     
@@ -38,6 +51,16 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onClick }) => {
 
   const handleWatchlistToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Check if user is authenticated
+    if (!user) {
+      // Show sign-in prompt
+      if (window.confirm('Please sign in to add movies to your watchlist. Would you like to sign in now?')) {
+        onAuthClick();
+      }
+      return;
+    }
+    
     const watchlist = JSON.parse(localStorage.getItem('watchlist') || '[]');
     let updatedWatchlist;
     

@@ -1,14 +1,17 @@
 import React from 'react';
 import { MovieCard } from './MovieCard';
 import { Movie } from '../types/movie';
+import type { User } from '@supabase/supabase-js';
 
 interface MovieGridProps {
   movies: Movie[];
   onMovieClick: (movie: Movie) => void;
   loading?: boolean;
+  user: User | null;
+  onAuthClick: () => void;
 }
 
-export const MovieGrid: React.FC<MovieGridProps> = ({ movies, onMovieClick, loading = false }) => {
+export const MovieGrid: React.FC<MovieGridProps> = ({ movies, onMovieClick, loading = false, user, onAuthClick }) => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -46,6 +49,8 @@ export const MovieGrid: React.FC<MovieGridProps> = ({ movies, onMovieClick, load
           key={movie.id}
           movie={movie}
           onClick={onMovieClick}
+          user={user}
+          onAuthClick={onAuthClick}
         />
       ))}
     </div>

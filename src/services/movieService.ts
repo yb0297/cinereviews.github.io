@@ -44,7 +44,9 @@ const movies: Movie[] = [
     vote_count: 29000, 
     genre_ids: [18, 878],
     pros: ["Breathtaking space visuals", "Emotional father-daughter story", "Scientific accuracy", "Hans Zimmer's incredible score"],
-    cons: ["Third act becomes very abstract", "Some scientific explanations are complex", "Can be emotionally heavy"]
+    cons: ["Third act becomes very abstract", "Some scientific explanations are complex", "Can be emotionally heavy"],
+    trailerLink: "https://www.youtube.com/watch?v=zSWdZVtXT7E",
+    watchLink: "https://www.netflix.com/title/70305903"
   },
   { 
     id: 4, 
@@ -57,7 +59,9 @@ const movies: Movie[] = [
     vote_count: 15000, 
     genre_ids: [35, 18, 53],
     pros: ["Brilliant social commentary", "Perfect blend of genres", "Outstanding cinematography", "Unpredictable plot twists"],
-    cons: ["Requires subtitles for non-Korean speakers", "Dark themes may disturb some", "Complex social messages"]
+    cons: ["Requires subtitles for non-Korean speakers", "Dark themes may disturb some", "Complex social messages"],
+    trailerLink: "https://www.youtube.com/watch?v=5xH0HfJHsaY",
+    watchLink: "https://www.hulu.com/movie/parasite-2019"
   },
   { 
     id: 5, 
@@ -70,7 +74,9 @@ const movies: Movie[] = [
     vote_count: 18000, 
     genre_ids: [12, 18, 878],
     pros: ["Stunning desert cinematography", "Epic world-building", "Excellent cast performances", "Faithful to source material"],
-    cons: ["Only covers half of the first book", "Slow pacing in parts", "Complex mythology for newcomers"]
+    cons: ["Only covers half of the first book", "Slow pacing in parts", "Complex mythology for newcomers"],
+    trailerLink: "https://www.youtube.com/watch?v=n9xhJrPXop4",
+    watchLink: "https://www.hbo.com/movies/dune-2021"
   },
   {
     id: 6,
@@ -83,7 +89,9 @@ const movies: Movie[] = [
     vote_count: 45000,
     genre_ids: [27, 53, 9648],
     pros: ["Genuinely scary atmosphere", "Great performances", "Excellent cinematography", "Classic horror storytelling"],
-    cons: ["Very frightening content", "Jump scares may be intense", "Not suitable for sensitive viewers"]
+    cons: ["Very frightening content", "Jump scares may be intense", "Not suitable for sensitive viewers"],
+    trailerLink: "https://www.youtube.com/watch?v=k10ETZ41q5o",
+    watchLink: "https://www.netflix.com/title/70239506"
   },
   {
     id: 7,
@@ -96,7 +104,9 @@ const movies: Movie[] = [
     vote_count: 28000,
     genre_ids: [35, 18, 10749],
     pros: ["Hilarious dialogue", "Great chemistry between leads", "Authentic teenage experience", "Memorable supporting characters"],
-    cons: ["Crude humor throughout", "Strong language", "May not appeal to all audiences"]
+    cons: ["Crude humor throughout", "Strong language", "May not appeal to all audiences"],
+    trailerLink: "https://www.youtube.com/watch?v=4eaZ_48ZYog",
+    watchLink: "https://www.netflix.com/title/70056113"
   }
 ];
 
@@ -115,6 +125,7 @@ const series: Movie[] = [
     isSeries: true,
     pros: ["Outstanding character development", "Brilliant writing and acting", "Perfect pacing and tension", "Memorable dialogues"],
     cons: ["Can be very intense", "Slow start for some viewers", "Dark themes throughout"],
+    trailerLink: "https://www.youtube.com/watch?v=HhesaQXLuRY",
     watchLink: "https://www.netflix.com/title/70143836"
   },
   {
@@ -130,6 +141,7 @@ const series: Movie[] = [
     isSeries: true,
     pros: ["Intense zombie action", "Character development", "Survival themes", "Post-apocalyptic atmosphere"],
     cons: ["Very violent and gory", "Can be emotionally heavy", "Some seasons weaker than others"],
+    trailerLink: "https://www.youtube.com/watch?v=sfAc2U20uyg",
     watchLink: "https://www.netflix.com/title/70177057"
   },
   {
@@ -145,6 +157,7 @@ const series: Movie[] = [
     isSeries: true,
     pros: ["Epic fantasy world-building", "Complex political intrigue", "Outstanding production values", "Memorable characters"],
     cons: ["Controversial final seasons", "Very violent content", "Complex plot to follow"],
+    trailerLink: "https://www.youtube.com/watch?v=KPLWWIOCOOQ",
     watchLink: "https://www.hbo.com/game-of-thrones"
   },
   {
@@ -160,6 +173,7 @@ const series: Movie[] = [
     isSeries: true,
     pros: ["Perfect 80s nostalgia", "Great young cast", "Supernatural mystery elements", "Excellent soundtrack"],
     cons: ["Can be scary for younger viewers", "Some seasons weaker than others", "Repetitive plot elements"],
+    trailerLink: "https://www.youtube.com/watch?v=b9EkMc79ZSU",
     watchLink: "https://www.netflix.com/title/80057281"
   }
 ];
@@ -179,6 +193,7 @@ const anime: Movie[] = [
     isAnime: true,
     pros: ["Stunning animation quality", "Emotional storytelling", "Beautiful soundtrack", "Unique time-travel concept"],
     cons: ["Can be confusing at first", "Requires attention to detail", "Emotional intensity"],
+    trailerLink: "https://www.youtube.com/watch?v=xU47nhruN-Q",
     watchLink: "https://www.crunchyroll.com/your-name"
   },
   {
@@ -194,6 +209,7 @@ const anime: Movie[] = [
     isAnime: true,
     pros: ["Intense action sequences", "Complex mystery elements", "Character development", "Political intrigue"],
     cons: ["Very violent content", "Can be emotionally heavy", "Complex plot"],
+    trailerLink: "https://www.youtube.com/watch?v=LHtdKWJdif4",
     watchLink: "https://www.crunchyroll.com/attack-on-titan"
   },
   {
@@ -209,6 +225,7 @@ const anime: Movie[] = [
     isAnime: true,
     pros: ["Incredible animation quality", "Emotional family story", "Amazing fight choreography", "Beautiful art style"],
     cons: ["Violent demon battles", "Can be sad at times", "Fast-paced action"],
+    trailerLink: "https://www.youtube.com/watch?v=VQGCKyvzIM4",
     watchLink: "https://www.crunchyroll.com/demon-slayer-kimetsu-no-yaiba"
   }
 ];
